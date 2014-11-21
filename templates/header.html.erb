@@ -2,22 +2,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="static/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
     <link rel="icon" type="image/png" href="static/style/favicon.png" />
     <link rel="alternate" type="application/rss+xml" href="rss.xml" />
     <title><%= title %></title>
   </head>
   <body>
-    <div id="page">
-    <div id="header">
-      <a id="title" href="."><%= h blog.title%></a>
-      <% links = [
-          [:posts, "Publications", "posts.html"],
-          [:about, "About", "about.html"]
-        ]
-        links.each do |id, name, url|
-      %>
-      <a <%= "id=\"active\" " if active_link == id %>class="menu" href="<%= u url %>"><%= name %></a>
-      <% end %>
-    </div>
-    <div id="content">
+    <div class="container">
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="."><%= h blog.title%></a>
+          </div>
+          <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <% links = [
+                  [:posts, "Posts", "posts.html"],
+                  [:about, "About", "about.html"]
+                ]
+                links.each do |id, name, url|
+              %>
+              <li <%= "class=\"active\" " if active_link == id %>><a href="<%= u url %>"><%= h(name) %></a></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="article">
