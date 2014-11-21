@@ -1,8 +1,8 @@
-<%= header(blog, "Publications", :posts) %>
+<%= header(blog, "Posts", :posts) %>
 
 <div class="row">
   <div class="col-md-12">
-    <h1>Publications</h1>
+    <h1>Posts</h1>
     <ul>
     <% blog.posts.each do |post| %>
       <li><a href="<%= u post.url %>"><%= h post.name %></a> <%= post.date_string %></li>
