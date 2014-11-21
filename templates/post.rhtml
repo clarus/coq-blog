@@ -1,0 +1,22 @@
+<%= header(blog, h(post.name), :posts) %>
+
+<div class="article">
+  <h1 class="post_title"><%= h post.name %></h1>
+  <h2 class="post_date"><%= post.date_string %></h2>
+  <%= post.content %>
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname = '<%= u blog.disqus %>';
+    
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript><p>Enable JavaScript to view the comments.</p></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<%= footer %>

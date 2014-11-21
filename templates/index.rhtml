@@ -1,0 +1,14 @@
+<%= header(blog, h(blog.title), :home) %>
+
+<% blog.posts[0..2].each do |post| %>
+<div class="article">
+  <h1><a href="<%= u post.url %>"><%= h post.name %></a></h1>
+  <h2><%= post.date_string %></h2>
+<%= post.content %>
+  <p class="note">
+    <a href="<%= u post.url %>#disqus_thread">Commentaires</a>
+  </p>
+</div>
+<% end %>
+
+<%= footer %>
