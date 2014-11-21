@@ -6,7 +6,7 @@ class Blog
   
   def initialize(title, disqus)
     @title, @disqus = title, disqus
-    @posts = Dir.glob("posts/*").map {|file_name| Post.new(file_name)}
+    @posts = Dir.glob("posts/*.html").map {|file_name| Post.new(file_name)}
       .sort_by {|post| post.date}.reverse
     @pages = Dir.glob("pages/*")
   end
