@@ -84,5 +84,4 @@ class Renderer
   end
 end
 
-# Run
 Renderer.new(Blog.new(*ARGV)).render

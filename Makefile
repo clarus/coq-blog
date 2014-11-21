@@ -1,9 +1,3 @@
-# Blog's title
-TITLE="Title"
-
-# Login on Disqus (you need an account to use the comment system)
-DISQUS="disquslogin"
-
 all: clean
 	mkdir blog
 	ln -rs static blog/static
