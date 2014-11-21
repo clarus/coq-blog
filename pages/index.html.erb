@@ -1,13 +1,15 @@
 <%= header(blog, h(blog.title), :home) %>
 
 <% blog.posts[0..2].each do |post| %>
-<div class="article">
-  <h1><a href="<%= u post.url %>"><%= h post.name %></a></h1>
-  <h2><%= post.date_string %></h2>
+<div class="row">
+  <div class="col-md-12">
+    <h1><a href="<%= u post.url %>"><%= h post.name %></a></h1>
+    <p class="lead"><%= post.date_string %></p>
 <%= post.content %>
-  <p class="note">
-    <a href="<%= u post.url %>#disqus_thread">Commentaires</a>
-  </p>
+    <p class="note">
+      <a href="<%= u post.url %>#disqus_thread">Comments</a>
+    </p>
+  </div>
 </div>
 <% end %>
 
