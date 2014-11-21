@@ -2,10 +2,10 @@ require 'erb'
 include ERB::Util
 
 class Blog
-  attr_reader :title, :url, :disqus, :pages, :posts
+  attr_reader :title, :disqus, :pages, :posts
   
-  def initialize(title, url, disqus)
-    @title, @url, @disqus = title, url, disqus
+  def initialize(title, disqus)
+    @title, @disqus = title, disqus
     @posts = Dir.glob("posts/*").map {|file_name| Post.new(file_name)}
       .sort_by {|post| post.date}.reverse
     @pages = Dir.glob("pages/*")
