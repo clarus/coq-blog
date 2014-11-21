@@ -10,7 +10,7 @@ DISQUS="disquslogin"
 all: clean
 	mkdir blog
 	ln -rs static blog/static
-	ruby light_blog.rb $(TITLE) $(URL) $(DISQUS)
+	ruby kalach_blog.rb $(TITLE) $(URL) $(DISQUS)
 
 clean:
 	rm -Rf blog/
