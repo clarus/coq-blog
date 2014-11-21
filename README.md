@@ -1,4 +1,4 @@
-# Kalach Blog
+# Light Blog
 A one hundred lines blog system.
 
 ## Generate
