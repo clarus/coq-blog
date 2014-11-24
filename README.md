@@ -23,3 +23,6 @@ Compile each time a post is updated:
 Preview the results on [localhost:8000](http://localhost:8000/):
 
     make serve
+
+## License
+Published under MIT License. This holds both for the posts and the blog engine. Fell free to clone it.
