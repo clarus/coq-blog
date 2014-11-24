@@ -60,7 +60,54 @@ Now compile with:
 Coq Makefile is clever and will also generate an `install` rule, among over things.
 
 ## Publish a development version
+We will first publish a package on the unstable repository. We need to do a pull-request to add a new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/)). Fork the [unstable repository](https://github.com/coq/repo-unstable) and add a folder `coq:that-super-proof/coq:that-super-proof.dev` in `packages/`. All packages must be in small caps, in the `coq:` namespace. You can also use your own `coq:name:` namespace for bigger projects.
 
-## Make a stable release
+A package is described by three files:
+
+* `descr`:
+
+        An arithmetic library.
+
+* `opam`:
+
+        opam-version: "1.1"
+        maintainer: "me@myself.ninja"
+        homepage: "https://github.com/myself/that-super-proof"
+        bug-reports: "https://github.com/myself/that-super-proof/issues"
+        license: "MIT"
+        build: [
+          ["./configure.sh"]
+          [make "-j%{jobs}%"]
+          [make "install"]
+        ]
+        remove: ["rm" "-R" "%{lib}%/coq/user-contrib/ThatSuperProof"]
+        depends: [
+          "coq" {>= "8.4pl4"}
+        ]
+
+
+* `url`:
+
+        http: "https://github.com/myself/that-super-proof/archive/master.tar.gz"
+
+You can test your own fork of the unstable repository using `opam repo add` on your fork. When everything is alright, issue a pull-request with your new package. It should be accepted quickly since there is no reviewing on the unstable repository (we only check there is no `rm -Rf` or so).
+
+## Make a stable version
+To publish a stable version you need to make a release. A release with a version number allows people to express reliable dependencies to your work. In GitHub, go to the *releases* section and add a new release named `1.0.0`. For version names we recommend the [SemVer](http://semver.org/) convention, `MAJOR.MINOR.PATCH` with:
+
+* `MAJOR`: breaking changes
+* `MINOR`: non-breaking changes
+* `PATCH`: bug fixes
+
+Fork the [stable repository](https://github.com/coq/repo-stable) and add a folder `coq:that-super-proof/coq:that-super-proof.1.0.0` in `packages/`. Add `descr` and `opam` files as before and a new `url`:
+
+    http: "https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz"
+    checksum: "da1da74c8f6c560b153ab8dc558cf29e"
+
+The MD5 checksum is mandatory, and can be obtained with:
+
+    curl -L https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz |md5sum
+
+Make a pull-request with your package. We will check it is compiling and accept it.
 
 ## Use the bench
