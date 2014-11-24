@@ -1,7 +1,8 @@
 # Coq Blog
-[coq-blog.clarus.me](http://coq-blog.clarus.me/)
+A blog about Coq. Hosted on [coq-blog.clarus.me](http://coq-blog.clarus.me/).
 
-Install dependencies:
+## Use
+Install the dependencies (you first need Ruby):
 
     gem install redcarpet
     curl -L https://github.com/clarus/coq-red-css/releases/download/1.0.0/style.min.css >static/style.min.css
