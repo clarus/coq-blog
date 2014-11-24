@@ -1,9 +1,10 @@
 <%= header(blog, h(post.name)) %>
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
     <h1 class="post_title"><%= h post.name %></h1>
-    <p class="lead"><%= post.date_string %></p>
+    <p><em><%= post.date_string %></em></p>
     <%= post.html %>
 
     <div id="disqus_thread"></div>
@@ -19,6 +20,7 @@
     <noscript><p>Enable JavaScript to view the comments.</p></noscript>
     <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
   </div>
+  <div class="col-md-1"></div>
 </div>
 
 <%= footer %>
