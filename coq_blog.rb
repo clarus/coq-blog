@@ -33,8 +33,7 @@ class Post
 end
 
 def render_erb(file_name, binding)
-  ERB.new(File.read(file_name, encoding: "UTF-8"))
-    .result(binding).gsub(/^\s*$\n/, "")
+  ERB.new(File.read(file_name, encoding: "UTF-8")).result(binding)
 end
 
 def header(blog, title)
