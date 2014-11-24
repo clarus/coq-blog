@@ -30,48 +30,27 @@ class Post
   end
 end
 
-class ErbFile
-  def initialize(file_name)
-    @erb = ERB.new(File.read(file_name, encoding: "UTF-8"))
-  end
-  
-  def result(binding)
-    @erb.result(binding).gsub(/^\s*$\n/, "")
-  end
+def render_erb(file_name, binding)
+  ERB.new(File.read(file_name, encoding: "UTF-8"))
+    .result(binding).gsub(/^\s*$\n/, "")
 end
 
-module Helpers
-  def header(blog, title, active_link)
-    ErbFile.new("templates/header.html.erb").result(binding)
-  end
-  
-  def footer
-    ErbFile.new("templates/footer.html.erb").result(binding)
-  end
+def header(blog, title)
+  render_erb("templates/header.html.erb", binding)
 end
 
-class View
-  include Helpers
-  attr_reader :url, :html
-end
-
-class PageView < View
-  def initialize(blog, file_name)
-    @url = File.basename(file_name, ".erb")
-    @html = ErbFile.new(file_name).result(binding)
-  end
-end
-
-class PostView < View
-  def initialize(blog, post)
-    @url = post.url
-    @html = ErbFile.new("templates/post.html.erb").result(binding)
-  end
+def footer
+  render_erb("templates/footer.html.erb", binding)
 end
 
 blog = Blog.new("Coq", "login")
-page_views = [PageView.new(blog, "index.html.erb")]
-post_views = blog.posts.map {|post| PostView.new(blog, post)}
-(page_views + post_views).each do |view|
-  File.open("blog/#{view.url}", "w") {|f| f << view.html}
+
+File.open("blog/index.html", "w") do |f|
+  f << render_erb("index.html.erb", binding)
+end
+
+for post in blog.posts do
+  File.open("blog/#{post.url}", "w") do |f|
+    f << render_erb("templates/post.html.erb", binding)
+  end
 end
