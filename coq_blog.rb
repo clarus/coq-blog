@@ -45,7 +45,7 @@ def footer
   render_erb("templates/footer.html.erb", binding)
 end
 
-blog = Blog.new("Coq blog", "coqblog")
+blog = Blog.new("Coq blog - Guillaume Claret", "coqblog")
 
 File.open("blog/index.html", "w") do |f|
   f << render_erb("index.html.erb", binding)
