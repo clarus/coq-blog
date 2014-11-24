@@ -2,13 +2,12 @@ require 'erb'
 include ERB::Util
 
 class Blog
-  attr_reader :title, :disqus, :pages, :posts
+  attr_reader :title, :disqus, :posts
   
   def initialize(title, disqus)
     @title, @disqus = title, disqus
     @posts = Dir.glob("posts/*.html").map {|file_name| Post.new(file_name)}
       .sort_by {|post| post.date}.reverse
-    @pages = Dir.glob("pages/*")
   end
 end
 
@@ -71,7 +70,7 @@ class PostView < View
 end
 
 blog = Blog.new("Coq", "login")
-page_views = blog.pages.map {|file_name| PageView.new(blog, file_name)}
+page_views = [PageView.new(blog, "index.html.erb")]
 post_views = blog.posts.map {|post| PostView.new(blog, post)}
 (page_views + post_views).each do |view|
   File.open("blog/#{view.url}", "w") {|f| f << view.html}
