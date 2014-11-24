@@ -70,18 +70,9 @@ class PostView < View
   end
 end
 
-class Renderer
-  def initialize(blog)
-    @blog = blog
-  end
-  
-  def render
-    page_views = @blog.pages.map {|file_name| PageView.new(@blog, file_name)}
-    post_views = @blog.posts.map {|post| PostView.new(@blog, post)}
-    (page_views + post_views).each do |view|
-      File.open("blog/#{view.url}", "w") {|f| f << view.html}
-    end
-  end
+blog = Blog.new("Coq", "login")
+page_views = blog.pages.map {|file_name| PageView.new(blog, file_name)}
+post_views = blog.posts.map {|post| PostView.new(blog, post)}
+(page_views + post_views).each do |view|
+  File.open("blog/#{view.url}", "w") {|f| f << view.html}
 end
-
-Renderer.new(Blog.new("Coq", "login")).render
