@@ -1,4 +1,5 @@
 require 'erb'
+require 'redcarpet'
 include ERB::Util
 
 class Blog
@@ -6,22 +7,23 @@ class Blog
   
   def initialize(title, disqus)
     @title, @disqus = title, disqus
-    @posts = Dir.glob("posts/*.html").map {|file_name| Post.new(file_name)}
+    @posts = Dir.glob("posts/*.md").map {|file_name| Post.new(file_name)}
       .sort_by {|post| post.date}.reverse
   end
 end
 
 class Post
-  attr_reader :name, :date, :content, :url
+  attr_reader :name, :date, :html, :url
   
   def initialize(file_name)
-    if /\A(\d+)-(\d+)-(\d+)\s*(.*)\z/ === File.basename(file_name, ".html") then
+    if /\A(\d+)-(\d+)-(\d+)\s*(.*)\z/ === File.basename(file_name, ".md") then
       @date = Time.local($1, $2, $3)
       @name = $4
     else
-      raise "The name #{file_name.inspect} should have the form \"yyyy-mm-dd title.html\"."
+      raise "The name #{file_name.inspect} should have the form \"yyyy-mm-dd title.md\"."
     end
-    @content = File.read(file_name, encoding: "UTF-8")
+    markdown = File.read(file_name, encoding: "UTF-8")
+    @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
     @url = "#{@name.gsub(/[^a-zA-Z0-9]/, "-")}.html"
   end
 
@@ -43,7 +45,7 @@ def footer
   render_erb("templates/footer.html.erb", binding)
 end
 
-blog = Blog.new("Coq", "login")
+blog = Blog.new("Coq blog", "login")
 
 File.open("blog/index.html", "w") do |f|
   f << render_erb("index.html.erb", binding)
