@@ -1,7 +1,7 @@
 all: clean
 	mkdir blog
 	ln -rs static blog/static
-	ruby light_blog.rb $(TITLE) $(DISQUS)
+	ruby coq_blog.rb
 
 clean:
 	rm -Rf blog/

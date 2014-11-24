@@ -84,4 +84,4 @@ class Renderer
   end
 end
 
-Renderer.new(Blog.new(*ARGV)).render
+Renderer.new(Blog.new("Coq", "login")).render

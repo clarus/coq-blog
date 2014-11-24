@@ -1,6 +1,6 @@
 blog/
 posts/
-static/
+static/style.min.css
 
 *.gem
 *.rbc

@@ -1,7 +1,7 @@
-# Light Blog
-A one hundred lines blog system.
+# Coq Blog
+http://coq-blog.clarus.me/
+A blog about [Coq](https://coq.inria.fr/) developments.
 
-## Generate
-Run:
-
-    TITLE=Title DISQUS=login make
+    curl -L https://github.com/clarus/coq-red-css/releases/download/1.0.0/style.min.css >static/style.min.css
+    make
+    make serve
