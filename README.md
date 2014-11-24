@@ -2,10 +2,15 @@
 A blog about Coq. Hosted on [coq-blog.clarus.me](http://coq-blog.clarus.me/).
 
 ## Use
-Install the dependencies (you first need Ruby):
+Install the Markdown parser (you first need Ruby):
 
     gem install redcarpet
+
+Add my coq-ish theme:
+
     curl -L https://github.com/clarus/coq-red-css/releases/download/1.0.0/style.min.css >static/style.min.css
+
+If you want other themes, add a [Bootstrap](http://getbootstrap.com/) based CSS in `static/style.min.css`. A nice list is available on [Bootswatch](http://bootswatch.com/).
 
 Compile:
 
