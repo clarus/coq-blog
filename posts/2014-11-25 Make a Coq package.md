@@ -1,15 +1,17 @@
-We will show here a typical workflow to create and publish a Coq package on [OPAM](http://opam.ocamlpro.com/). OPAM is now the recommended way to distribute Coq packages. This will allow you to share your Coq developments in a simple way and gain visibility. Other users just need a:
+We will show a typical workflow to create and publish a Coq package on [OPAM](http://opam.ocamlpro.com/). This will allow you to share your Coq developments in a simple way and gain visibility.
+
+OPAM is now the recommended way to distribute Coq packages. Other users just need a:
 
     opam install coq:that-super-proof
 
-to see that what you did *actually* works and to use it.
+to see what you did and use it.
 
 We assume you already know how to use OPAM to install Coq packages. If not, you can read this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html).
 
 ## Create a project
-Go on [GitHub](https://github.com/) and make a new project. To get the best chances to be reviewed, it is a good practice to always chose the tools that most people use. Today, GitHub is the most popular hosting platform for projects, and a pull-request (external contribution) is a matter of a click.
+Go on [GitHub](https://github.com/) and make a new project, for example `that-super-proof`. To have the best chances to get contributions and remarks, it is a good practice to always chose the tools that most people use. Today, GitHub is the most popular hosting platform for projects, and a pull-request (external contribution) is a matter of a click.
 
-Clone your repository to, for example, `that-super-proof/`. Add an `LICENSE` file with your copyright if you want your package to be open-source (by default, a code is considered proprietary). The [MIT](http://opensource.org/licenses/MIT) license is one of the most permissive and popular licenses:
+Clone your repository. Add an `LICENSE` file with your copyright to make your package open-source (according to the law, a code is considered proprietary by default). The [MIT](http://opensource.org/licenses/MIT) license is one of the most permissive and popular licenses:
 
     The MIT License (MIT)
 
@@ -39,7 +41,7 @@ Add a main file `All.v`:
       now admit.
     Qed.
 
-You can commit your work.
+You can now commit your work.
 
 ## Compile
 We will use `coq_makefile`. Add a project file `Make`:
@@ -54,7 +56,7 @@ and an executable script `configure.sh`:
 
     coq_makefile -f Make -o Makefile
 
-Now compile with:
+Compile with:
 
     ./configure.sh
     make
@@ -91,7 +93,7 @@ A package is described by three files:
 
         http: "https://github.com/myself/that-super-proof/archive/master.tar.gz"
 
-You can test your own fork of the unstable repository using `opam repo add` on your fork. When everything is alright, issue a pull-request with your new package. It should be accepted quickly since there is no reviewing on the unstable repository (we only check there is no `rm -Rf` or so).
+You can test your own fork of the unstable repository using `opam repo add` on your fork. Then, issue a pull-request with your new package. It should be accepted quickly since there is no reviewing on the unstable repository (we only check there is no `rm -Rf` or so).
 
 ## Make a stable version
 To publish a stable version you need to make a release. A release with a version number allows people to express reliable dependencies to your work. In GitHub, go to the *releases* section and add a new release named `1.0.0`. For version names we recommend the [SemVer](http://semver.org/) convention, `MAJOR.MINOR.PATCH` with:
