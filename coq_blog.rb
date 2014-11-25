@@ -3,10 +3,10 @@ require 'redcarpet'
 include ERB::Util
 
 class Blog
-  attr_reader :title, :disqus, :posts
+  attr_reader :title, :url, :disqus, :posts
   
-  def initialize(title, disqus)
-    @title, @disqus = title, disqus
+  def initialize(title, url, disqus)
+    @title, @url, @disqus = title, url, disqus
     @posts = Dir.glob("posts/*.md").map {|file_name| Post.new(file_name)}
       .sort_by {|post| post.date}.reverse
   end
@@ -44,10 +44,12 @@ def footer
   render_erb("templates/footer.html.erb", binding)
 end
 
-blog = Blog.new("Coq blog - Guillaume Claret", "coqblog")
+blog = Blog.new("Coq blog - Guillaume Claret", "http://coq-blog.clarus.me/", "coqblog")
 
-File.open("blog/index.html", "w") do |f|
-  f << render_erb("index.html.erb", binding)
+for page in ["index.html", "rss.xml"] do
+  File.open("blog/#{page}", "w") do |f|
+    f << render_erb("#{page}.erb", binding)
+  end
 end
 
 for post in blog.posts do

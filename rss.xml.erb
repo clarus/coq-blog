@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title><%= h blog.title %></title>
+    <description></description>
+    <link><%= blog.url %></link>
+    <lastBuildDate><%= Time.new.strftime("%a, %d %b %Y %H:%M:%S %z") %></lastBuildDate>
+    <atom:link href="<%= blog.url %>rss.xml" rel="self" type="application/rss+xml" />
+    <% blog.posts[0..4].each do |post| %>
+      <item>
+        <title><%= h post.name %></title>
+        <pubDate><%= post.date.strftime("%a, %d %b %Y %H:%M:%S %z") %></pubDate>
+        <description><%= h post.html %></description>
+        <link><%= "#{blog.url}#{u post.url}" %></link>
+        <guid><%= "#{blog.url}#{u post.url}" %></guid>
+      </item>
+    <% end %>
+  </channel>
+</rss>
