@@ -1,6 +1,8 @@
-[Pluto](https://github.com/coq-concurrency/pluto) is the first web server written in [Coq](https://coq.inria.fr/). It is a research project which aims to apply the pure and dependently typed [Coq](https://coq.inria.fr/) language to system programming, with inputs/outputs and fine grained concurrency in mind.
+[Pluto](https://github.com/coq-concurrency/pluto) is the first web server written in [Coq](https://coq.inria.fr/).
 
-For now it can serve static websites, using event-based I/Os and lightweight threads to handle concurrent requests.
+It is a research project which aims to apply the pure and dependently typed [Coq](https://coq.inria.fr/) language to system programming, with inputs/outputs and fine grained concurrency in mind. This kind of programming is particularly error-prone and hard to test, due to non-determinism and interactions with the external world. Moreover, such programs like servers and databases can manipulate critical data, for example in a professional environment. We try to develop new programming techniques with an extremist and purely functional approach, in the hope to lead to safer systems.
+
+For now Pluto can serve static websites, using event-based I/Os and lightweight threads to handle concurrent requests.
 
 ## Use
 The simplest way to install [Pluto](https://github.com/coq-concurrency/pluto) is to use [OPAM](http://opam.ocamlpro.com/) for Coq. See this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html) for more informations. Add the stable and unstable repositories:
@@ -53,7 +55,7 @@ There is no mechanism to prove properties about the effects yet (I/Os, shared me
 
 We can also question the correctness of the compilation to OCaml, or whether the `run` function in Coq is faithful to the extracted code. We have no formal proof, but we designed the system with correctness in mind. In particular, we designed our DSL with a minimal "attack surface". The memory, the lightweight threads, the exit effect are compiled by monadic transformation in Coq and then using the standard extraction mechanism. For I/Os, there is no abstract `World` type which could lead to duplication in Coq. We just use a monad reader and monad writer, and messages are sent or read into a pipe. On the long term, we could dream of a formally proven Coq compiler and adapt it to our customized compilation of read/write effects.
 
-## Code extract
+## Code extracts
 This is the main function of the server, in [pluto/Pluto.v](https://github.com/coq-concurrency/pluto/blob/master/Pluto.v):
 
     Definition program (argv : list LString.t) : C.t [] unit :=
@@ -94,6 +96,8 @@ The function `get` is parametrized by a handler `N -> C.t sig unit` which is a c
 We log the current time in RFC 1123 format with a welcome message and bind to the server socket. The handler is listening while there are new clients connecting, and runs the `handle_client` method for each. This program may never terminate, while we are writing pure Coq without explicit non-termination monad. The non-termination effect is provided by the monad reader, which is compiled to OCaml as an infinite loop listening to the system pipe.
 
 ## Future work
-...
+We learn many things writing a realistic example of a web server in Coq, especially in the way of implementing side effects. We also shown that it is possible to use Coq as a programming language to write interactive and concurrent softwares.
 
-Note: *Pluto is also the only planet discovered and undiscovered by the Americans. The [New Horizons](http://en.wikipedia.org/wiki/New_Horizons) space probe should allow us to know more about this mysterious object.*
+Our main goal now is to extend our DSL of computations with a specification and a certification mechanism. We would like to write a specification of the non-purely functional part of our web server and prove its correctness, exploiting the unique ability of Coq to marry proofs and programs.
+
+Note: *Pluto is also the only planet discovered and undiscovered by the Americans. The [New Horizons](http://en.wikipedia.org/wiki/New_Horizons) space probe should give us more insights about this mysterious object.*
