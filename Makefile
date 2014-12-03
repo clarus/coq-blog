@@ -3,6 +3,9 @@ all: clean
 	ln -rs static blog/static
 	ruby coq_blog.rb
 
+watch:
+	while inotifywait posts/*; do make; done
+
 clean:
 	rm -Rf blog/
 
