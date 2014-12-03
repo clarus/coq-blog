@@ -7,7 +7,7 @@ More important, in practice a lot of people prefer to use the development versio
 ## Check your code
 [OPAM](http://opam.ocamlpro.com/) is the best way to test your code with different versions of Coq. You can read this [introduction](http://coq-blog.clarus.me/use-opam-for-coq.html) to learn more about how to use OPAM for Coq.
 
-Let us say we want to test our project `foo` with Coq versions `8.4.5` and `dev`. We create two installs of Coq in `foo/opam.8.4.5` and `foo/opam.dev`. For the stable version:
+Let us say we want to test our project `foo` with the Coq versions `8.4.5` and `dev`. We create two installs of Coq in `foo/opam.8.4.5` and `foo/opam.dev`. For the stable version:
 
     cd foo/
     mkdir opam.8.4.5 # we create the empty directory to prevent a bug of OPAM
@@ -23,26 +23,26 @@ In an other terminal, for the unstable Coq:
     opam repo add coqs https://github.com/coq/repo-coqs.git
     opam install --jobs=4 coq.dev
 
-You have now a different version of Coq in each terminal, and can test your code for these versions. If you have an old compute, and may be afraid of having many Coq installations for each project, remember you can always use cache mechanisms like the one provided by [Docker](https://www.docker.com/) to save disk space.
+You have now a different version of Coq in each terminal, and can test your code for two versions. If you have an old computer, and may be afraid of having many Coq installations for each project, remember you can always use cache mechanisms like the one provided by [Docker](https://www.docker.com/) to save disk space.
 
-We also provide a [coq-bench](http://coq-bench.github.io/) website, where OPAM packages are tested for different versions of Coq. So if you make a package it is a simple way to check your code compatibility.
+We also provide a [coq-bench](http://coq-bench.github.io/) website, where OPAM packages are tested for different versions of Coq. This is another simple way to check your code compatibility if you have a package.
 
 ## Be clean and robust
-This is obvious but this must be emphasized. Most Coq features outside the kernel can be considered as experimental, or do not have a clear semantics. This includes in particular the tactic language.
+This is obvious but this must be emphasized: be clean and robust. Most Coq features outside the kernel can be considered as experimental, or do not have a clear semantics. This includes in particular the tactic language [LTac](https://coq.inria.fr/distrib/V8.4pl5/refman/Reference-Manual012.html).
 
 So try not to rely too much on advanced features, and make your proofs scripts robust (using [explicitly named variables](http://poleiro.info/posts/2013-11-17-automatic-naming-considered-harmful.html) or [bullets](http://poleiro.info/posts/2013-06-27-structuring-proofs-with-bullets.html) for example).
 
 ## Preprocess
 You should use preprocessing to solve breaking incompatibility changes. This helps to keep one code database, instead of splitting your developments with one branch per Coq version.
 
-Some people still use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead you should go for more modern tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:
+Some people still use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead, you should go for more modern tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:
 
     Definition proj (n : {n : nat & n >= 2}) : nat :=
       match n with
       | existT n _ => n
       end.
 
-This code will not work in Coq dev as you need one more argument in the `match`:
+This code will not work with `coq.dev` as you need one more argument in the `match`:
 
     Definition proj (n : {n : nat & n >= 2}) : nat :=
       match n with
@@ -56,7 +56,7 @@ The solution is to make a `Test.v.erb` file, which will be preprocessed into `Te
       | existT <%= "_" unless version[0..2] == "8.4" %> n _ => n
       end.
 
-We add a `_` unless if the Coq version starts by `8.4`. Other common constructs are:
+We add a `_` in the `match`, unless if the Coq version starts by `8.4`. Other common constructs are:
 
     <%= "bla" if version[0..2] == "8.4" %>
     <%= version[0..2] == "8.4" ? "bla" : "bli" %>
