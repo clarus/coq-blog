@@ -1,4 +1,4 @@
-Coq is about to have a package manager: [OPAM](http://opam.ocamlpro.com/). This is already the package manager of [OCaml](https://ocaml.org/), so it seemed to be the natural choice for us, since Coq and its plugins are already coded in OCaml.
+Coq now has its package manager: [OPAM](http://opam.ocamlpro.com/). This is already the package manager of [OCaml](https://ocaml.org/) so it was the natural choice for us, since Coq and its plugins are already coded in OCaml.
 
 ## Install OPAM
 Install OPAM by your preferred method. It is recommended to use the latest version (`1.2` as of today), which can be installed from the sources:
