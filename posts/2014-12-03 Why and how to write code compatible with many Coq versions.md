@@ -1,8 +1,8 @@
 You should always write your code to make it compatible with at least two consecutive Coq versions, if you wish to have larger people adoption.
 
-The pace of Coq releases is surprising slow for a project with that many users (mainly due to some organization problems, but I will not debate about it). However, the releases happen and usually introduce a lot of incompatibilities. At this point, users depending on your libraries may be forced to migrate because of other dependencies, or forced not to migrate. Playing nice with them means allowing them to have the choice.
+The pace of Coq releases is surprisingly slow for a project with that many users, unfortunately due to a lack of organization resources. However, the releases happen and usually introduce a lot of incompatibilities. At this point, users depending on your libraries may be forced to migrate because of other dependencies, or forced not to migrate. Playing nice with them means allowing them to have the choice.
 
-More important, in practice a lot of people prefer to use the development version of Coq (due to the slow release cycle). So your code should at least support the latest stable release and the current development version.
+More important, a lot of people prefer to use the development version of Coq because of the slow release cycle. So your code should at least support the latest stable release and the current development version.
 
 ## Check your code
 [OPAM](http://opam.ocamlpro.com/) is the best way to test your code with different versions of Coq. You can read this [introduction](http://coq-blog.clarus.me/use-opam-for-coq.html) to learn more about how to use OPAM for Coq.
@@ -79,3 +79,5 @@ To preprocess this `Test.v.erb` file, create a `pp.rb` file at the root of your 
     end
 
 The command `ruby pp.rb` will then compile all the files matching `*.v.erb` to `*.v`.
+
+As mentioned in the comments, the main drawback of preprocessing is that you cannot use it with an interactive IDE. The only solution is to edit the `.v` files in the IDE for one specific version of Coq, and do back-and-forths with the `.v.erb` files to add compatibility.
