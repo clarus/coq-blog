@@ -1,8 +1,8 @@
 [Pluto](https://github.com/coq-concurrency/pluto) is the first web server written in [Coq](https://coq.inria.fr/).
 
-It is a research project which aims to apply the pure and dependently typed [Coq](https://coq.inria.fr/) language to system programming, with inputs/outputs and fine grained concurrency in mind. This kind of programming is particularly error-prone and hard to test, due to non-determinism and interactions with the external world. Moreover, such programs like servers and databases can manipulate critical data, for example in a professional environment. We try to develop new programming techniques with an extremist and purely functional approach, in the hope to lead to safer systems.
+It is a research project which aims to apply the pure and dependently typed [Coq](https://coq.inria.fr/) language to system programming, with inputs/outputs and fine grained concurrency in mind. This kind of programming is particularly error-prone and hard to test, due to non-determinism and interactions with the external world. Moreover, such programs (like servers and databases) often manipulate critical data. We try to develop new programming techniques with an extremist and purely functional approach, in the hope to lead to safer systems.
 
-For now Pluto can serve static websites, using event-based I/Os and lightweight threads to handle concurrent requests.
+For now [Pluto](https://github.com/coq-concurrency/pluto) can serve static websites, using event-based I/Os and lightweight threads to handle concurrent requests.
 
 ## Use
 The simplest way to install [Pluto](https://github.com/coq-concurrency/pluto) is to use [OPAM](http://opam.ocamlpro.com/) for Coq. See this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html) for more informations. Add the stable and unstable repositories:
@@ -21,14 +21,14 @@ Run it on some `html/` folder:
 Your website is now available on [localhost:8000](http://localhost:8000/).
 
 ## Architecture
-Coq is a pure language so it cannot directly express concurrency and I/Os. For that we use a Domain Specific Language (DSL) with new primitive constructs to describe impure computations. The architecture is implemented in the [Coq concurrency - system](https://github.com/coq-concurrency/system) project.
+Coq is a pure language so it cannot directly express concurrency and I/Os. For that we use a Domain Specific Language (DSL) with new primitive constructs to describe impure computations. The architecture is implemented in the [coq-concurrency/system](https://github.com/coq-concurrency/system) project.
 
 ### Operators
-The `Read` and `Write` commands read or update atomically global references (shared by all the threads). `Ret` lifts a pure Coq expression, `Bind` sequences two computations. The `Send` constructor does an asynchronous call to the OS. It provides a handler with its own private memory (a lightweight thread), called each time an answer is sent to the request. The `Exit` command halts the program and stops all pending handlers.
+The `Read` and `Write` commands read or update atomically global references (shared by all the threads). `Ret` lifts a pure Coq expression, `Bind` sequences two computations. The `Send` constructor does an asynchronous call to the OS. It uses a handler with its own private memory (a lightweight thread), called each time an answer is sent to the request. The `Exit` command halts the program and stops all pending handlers.
 
 We decided to use fully asynchronous I/Os with lightweight threads for two reasons:
 
-* it is generally considered more efficient than synchronous system-calls plus system-threads (see the evolution from the [Apache](http://www.apache.org/) 1 multi-threaded server to mono-threaded event-driven systems like [Node.js](http://nodejs.org/))
+* it is generally considered more efficient than the synchronous system-calls plus system-threads model (see the evolution from the [Apache](http://www.apache.org/) 1 multi-threaded server to mono-threaded event-driven systems like [Node.js](http://nodejs.org/))
 * it corresponds more to what computers intrinsically are: the most primitive communication facilities on microprocessors are the [OUT instruction](http://x86.renejeschke.de/html/file_module_x86_id_222.html) and the [interruption mechanism](http://en.wikipedia.org/wiki/Interrupt). The [Direct Memory Access](http://en.wikipedia.org/wiki/Direct_memory_access) is a fastest solution in practice, but also relies on these primitives. Finally, this corresponds to the [Xen API](http://openmirage.org/wiki/xen-events) design, in the hope that some day Coq could be ported as an unikernel like OCaml with [MirageOS](http://www.openmirage.org/).
 
 ### Implementation
@@ -42,7 +42,7 @@ The impure effects can be classified into three categories:
 * exit
 * asynchronous calls
 
-The memory and exit effects are implemented (both in Coq and OCaml) by the monadic transformations of the state and exception monads (see [monadic transformations](http://gallium.inria.fr/~xleroy/mpri/progfunc/monads.2up.pdf)).
+The memory and exit effects are implemented, both in Coq and OCaml, by the monadic transformations of the state and exception monads (see [monadic transformations](http://gallium.inria.fr/~xleroy/mpri/progfunc/monads.2up.pdf)).
 
 In Coq, the asynchronous calls are represented by a monad reader and a monad writer. The system-calls are typed, and to each request type corresponds one answer type. The handlers are stored into a heap and must have a type compatible with their request. They have their own private memory (implemented as a state monad), and can be called an unbounded number of times (for example, with a web server, the socket listener will get as many inputs as connecting clients). A handler can also disconnect itself to be garbage collected.
 
