@@ -1,4 +1,4 @@
-[Pluto](https://github.com/coq-concurrency/pluto) is the first web server written in [Coq](https://coq.inria.fr/).
+[Pluto](https://github.com/coq-concurrency/pluto) is, to our knowledge, the first concurrent web server written in Gallina, the functional language of [Coq](https://coq.inria.fr/).
 
 It is a research project which aims to apply the pure and dependently typed [Coq](https://coq.inria.fr/) language to system programming, with inputs/outputs and fine grained concurrency in mind. This kind of programming is particularly error-prone and hard to test, due to non-determinism and interactions with the external world. Moreover, such programs (like servers and databases) often manipulate critical data. We try to develop new programming techniques with an extremist and purely functional approach, in the hope to lead to safer systems.
 
