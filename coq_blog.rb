@@ -24,7 +24,7 @@ class Post
     end
     markdown = File.read(file_name, encoding: "UTF-8")
     @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
-    @url = "#{@name.gsub(/[^a-zA-Z0-9]/, "-").downcase}.html"
+    @url = "#{@name.gsub(/[^a-zA-Z0-9]+/, "-").downcase}.html"
   end
 
   def date_string
