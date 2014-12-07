@@ -48,7 +48,7 @@ In Coq, the asynchronous calls are represented by a monad reader and a monad wri
 
 In OCaml, the handlers are stored in the heap extracted from the Coq implementation. Communication with the OS occurs through a unique bidirectional pipe. The `Send` method writes a message on the pipe. A single loop listens synchronously to the pipe, and dispatches the events to the handlers. All messages are serialized into strings. At the other end of the pipe sits a [proxy](https://github.com/coq-concurrency/proxy). The proxy parses the messages and translates them into real system-calls. It is implemented in OCaml using [Lwt](http://ocsigen.org/lwt/). Note that Lwt is not used as a lightweight threads library, but as an asynchronous API to Unix. For a more technical discussion about asynchronous system-calls in Unix, you can read this [paper](http://www.pps.univ-paris-diderot.fr/~jch/research/cpc-2012.pdf) of Kerneis and Chroboczek.
 
-![Schema](static/images/pluto_runtime.svg)
+![Schema](static/images/pluto_runtime.svg "Implementation architecture")
 
 ### Correction
 There is no mechanism to prove properties about the effects yet (I/Os, shared memory, ...). However it is possible to certify the functional part of the server, or any interactive Coq application based on our runtime, using standard techniques in Coq (see for example the [Program extension](http://www.pps.univ-paris-diderot.fr/~sozeau/research/publications/Program-ing_Finger_Trees_in_Coq.pdf) of Matthieu Sozeau).

@@ -16,7 +16,7 @@ class MarkdownRender < Redcarpet::Render::HTML
   include Redcarpet::Render::SmartyPants
 
   def image(link, title, alt_text)
-    "<img src=\"#{link}\" alt=\"#{alt_text}\" class=\"img-responsive center-block\" />"
+    "<img src=\"#{h(link)}\" alt=\"#{h(alt_text)}\" class=\"img-responsive center-block\" /><div class=\"text-center\"><mark>#{h(title)}</mark></div>"
   end
 end
 
