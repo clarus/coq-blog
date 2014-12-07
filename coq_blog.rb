@@ -12,6 +12,14 @@ class Blog
   end
 end
 
+class MarkdownRender < Redcarpet::Render::HTML
+  include Redcarpet::Render::SmartyPants
+
+  def image(link, title, alt_text)
+    "<img src=\"#{link}\" alt=\"#{alt_text}\" class=\"img-responsive center-block\" />"
+  end
+end
+
 class Post
   attr_reader :name, :date, :html, :url
   
@@ -23,7 +31,7 @@ class Post
       raise "The name #{file_name.inspect} should have the form \"yyyy-mm-dd title.md\"."
     end
     markdown = File.read(file_name, encoding: "UTF-8")
-    @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
+    @html = Redcarpet::Markdown.new(MarkdownRender, fenced_code_blocks: true).render(markdown)
     @url = "#{@name.gsub(/[^a-zA-Z0-9]+/, "-").downcase}.html"
   end
 

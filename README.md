@@ -8,7 +8,7 @@ Install the Markdown parser (you first need Ruby):
 
 Add my coq-ish theme:
 
-    curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.1/style.min.css >static/style.min.css
+    curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >static/style.min.css
 
 If you want other themes, add a [Bootstrap](http://getbootstrap.com/) based CSS in `static/style.min.css`. A nice list is available on [Bootswatch](http://bootswatch.com/).
 
