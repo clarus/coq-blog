@@ -31,7 +31,7 @@ class Post
       raise "The name #{file_name.inspect} should have the form \"yyyy-mm-dd title.md\"."
     end
     markdown = File.read(file_name, encoding: "UTF-8")
-    @html = Redcarpet::Markdown.new(MarkdownRender, fenced_code_blocks: true).render(markdown)
+    @html = Redcarpet::Markdown.new(MarkdownRender).render(markdown)
     @url = "#{@name.gsub(/[^a-zA-Z0-9]+/, "-").downcase}.html"
   end
 
