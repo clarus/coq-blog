@@ -4,7 +4,7 @@ all: clean
 	ruby coq_blog.rb
 
 watch:
-	while inotifywait posts/*; do make; done
+	while inotifywait posts/* next_posts/*; do make; done
 
 clean:
 	rm -Rf blog/
