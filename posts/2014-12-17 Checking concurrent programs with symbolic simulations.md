@@ -20,9 +20,9 @@ An other way to reduce non-determinism is to restrict the way we are waiting for
 
 A computation can be:
 
-* `Ret`: does nothing
-* `Par c1 c2`: starts `c1` and `c2` in parallel
-* `Send command request (fun answer => c)`: emits a request `request` of kind `command` with a handler for the answer
+* `Ret`: do nothing
+* `Par c1 c2`: start `c1` and `c2` in parallel
+* `Send command request (fun answer => c)`: emit a request `request` of kind `command` with a handler for the answer
 
 ## Simulations
 
