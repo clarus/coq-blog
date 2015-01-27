@@ -13,7 +13,6 @@ Get the sources:
 Add the Coq repositories with [OPAM](https://opam.ocaml.org/):
 
     opam repo add coq-stable https://github.com/coq/repo-stable.git
-    opam repo add coq-unstable https://github.com/coq/repo-unstable.git
 
 Install the dependencies:
 
@@ -33,6 +32,12 @@ Compile:
 Run on [localhost:8008](http://localhost:8008/):
 
     ./chickBlog.native
+
+### Dockerfile
+A Dockerfile is provided to run ChickBlog in an isolated environment using [Docker](https://www.docker.com/):
+
+    docker build --tag=chick-blog .
+    docker run -ti -p 8008:8008 chick-blog
 
 ## Specification
 The blog is defined in `Main.v` as the function:
