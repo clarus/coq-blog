@@ -86,7 +86,7 @@ A package is described by three files:
         ]
         remove: ["rm" "-R" "%{lib}%/coq/user-contrib/ThatSuperProof"]
         depends: [
-          "coq" {>= "8.4pl4"}
+          "coq" {>= "8.4.5" & < "8.5"}
         ]
 
 * `url`:
