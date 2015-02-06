@@ -91,7 +91,7 @@ A package is described by three files:
 
 * `url`:
 
-        http: "https://github.com/myself/that-super-proof/archive/master.tar.gz"
+        git: "https://github.com/myself/that-super-proof"
 
 You can test your own fork of the unstable repository using `opam repo add` on your fork. Then, issue a pull-request with your new package. It should be accepted quickly since there is no reviewing on the unstable repository (we only check there is no `rm -Rf` or so).
 
