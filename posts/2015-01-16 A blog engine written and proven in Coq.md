@@ -75,3 +75,5 @@ Given any `cookies` and `post_headers`, we execute the server handler on the pag
 
 ### Privacy
 We check that, for any runs of a program, an unauthenticated user cannot access private pages (like edit) or modify the file system with system calls.
+
+*More on [Hacker News](https://news.ycombinator.com/item?id=9037115), [Reddit](https://www.reddit.com/r/programming/comments/2vn3xa/a_blog_engine_written_and_proven_in_coq/) and [Lobsters](https://lobste.rs/s/7ugonf/a_blog_engine_written_and_proven_in_coq/comments/4oholx).*
