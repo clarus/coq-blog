@@ -18,7 +18,7 @@ Compile:
 
 Compile each time a post is updated:
 
-    while inotifywait posts/*; do make; done
+    make watch
 
 Preview the results on [localhost:8000](http://localhost:8000/):
 
