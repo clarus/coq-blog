@@ -43,6 +43,9 @@ Add a main file `All.v`:
 
 You can now commit your work.
 
+### The case of OCaml plugins
+If your project is a Coq plugin (containing [OCaml](https://ocaml.org/) files), you can get inspiration from the [Constructors](https://github.com/mattam82/Constructors) project of [Matthieu Sozeau](http://www.pps.univ-paris-diderot.fr/~sozeau/). This is an example of a simple OCaml plugin, including the branches `v8.4` and `v8.5` for compatibility with the different versions of Coq.
+
 ## Compile
 We will use `coq_makefile`. Add a project file `Make`:
 
