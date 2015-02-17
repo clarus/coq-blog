@@ -4,9 +4,10 @@
 * Coq developers, to monitor the changes breaking compatibility.
 
 ## Use the bench
-The results of the bench are available on [coq-bench.github.io](http://coq-bench.github.io/), using the two installation strategies `clean` and `tree`. The results are presented in a colored table with the installation times for valid packages. The best column is the best score obtained for each package.
+The results of the bench are available on [coq-bench.github.io](http://coq-bench.github.io/), using the two installation strategies `clean` and `tree`. The results are presented in a colored table with the installation times for valid packages. The `best` column contains the best score obtained for each package.
 
 We check:
+
 * that packages are well-formed, using our [lint](https://github.com/coq-bench/run/blob/master/lint.rb) checker
 * the installation of dependencies (with a timeout of 5 minutes)
 * the installation of the package (with a timeout of 30 minutes)
@@ -18,6 +19,7 @@ Because your dependencies may evolve, it is good practice to regularly check the
 
 ## Architecture
 The bench system is hosted on GitHub in the organization [coq-bench](https://github.com/coq-bench). There are four projects:
+
 * [run](https://github.com/coq-bench/run): run the benchmarks
 * [database](https://github.com/coq-bench/database): the backup of the benchmarks
 * [make-html](https://github.com/coq-bench/make-html): generate the web pages
@@ -41,6 +43,7 @@ These are the static HTML pages of the bench website. [GitHub](https://github.co
 There are many possible strategies with respect to the installation order of the packages. The installation order is important because OPAM installs different dependencies in different contexts.
 
 We would like to optimize the installation order to reduce the total execution time of the bench, by always installing and testing the dependencies first, so that no packages are compiled twice. Unfortunately this is not possible. Here is a simple counter example. With the following list of packages:
+
 * `A.1.0.0`
 * `A.2.0.0`
 * `B.1.0.0` depending on `A` (any versions)
@@ -87,6 +90,7 @@ This strategy is more clever but also more fragile. We use the branch mechanism 
 
 ## Related work
 The OPAM for OCaml community did some work to obtain a bench system too. There are:
+
 * [OPAM Weather Service](http://ows.irill.org/): do not install the packages, only check the dependency constraints
 * [OPAM Bulk](http://www.recoil.org/~avsm/opam-bulk/): a prototype of bench system
 * [OCamlot](https://github.com/ocamllabs/ocamlot): a bench system (abandoned)
