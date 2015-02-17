@@ -1,4 +1,6 @@
-[OPAM](http://opam.ocamlpro.com/) is the package manager for [Coq](https://coq.inria.fr/), providing today [28 stable](https://github.com/coq/repo-stable/tree/master/packages) and [346 unstable](https://github.com/coq/repo-unstable/tree/master/packages) packages (counting two different versions of a package as two different packages). This number is growing, so we needed a bench system to automatically check that all packages are compiling. The [bench system](http://coq-bench.github.io/) will help both:
+We will present the [bench system](http://coq-bench.github.io/) for the [Coq](https://coq.inria.fr/) packages.
+
+[OPAM](http://opam.ocamlpro.com/) is the package manager for Coq, providing today [28 stable](https://github.com/coq/repo-stable/tree/master/packages) and [346 unstable](https://github.com/coq/repo-unstable/tree/master/packages) packages (counting two different versions of a package as two different packages). This number is growing, so we needed a bench system to automatically check that all packages are compiling. The bench system will help both:
 
 * packages developers, to check that their programs are compiling with correct dependency constraints;
 * Coq developers, to monitor the changes breaking compatibility.
