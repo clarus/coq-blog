@@ -1,4 +1,4 @@
-We will present the classic [Hello World](http://en.wikipedia.org/wiki/%22Hello,_world!%22_program) program in [Coq](https://coq.inria.fr/), and explain how to compile and run it. We will also introduce a way you can specify and prove interactive programs in Coq.
+We will present the classic [Hello World](http://en.wikipedia.org/wiki/%22Hello,_world!%22_program) program in [Coq](https://coq.inria.fr/). We will explain how to compile, run, and certify interactive programs in Coq.
 
 The *Hello World* program exists in almost every languages, including [in White Space](http://en.wikipedia.org/wiki/List_of_Hello_world_program_examples#W). In Coq this is more complicated because the language is purely functional. This means that no effects can be done, in particular no inputs-outputs. This constraint is there to preserve the logical consistency of the system. However, we can still encode inputs-outputs by defining a [monad](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). This technique was popularized by the [Haskell](http://en.wikipedia.org/wiki/Haskell_%28programming_language%29) programming language.
 
@@ -37,14 +37,14 @@ to generate an [OCaml](https://ocaml.org/) file `main.ml`. We compile and run th
 This should display `Hello world!` on the terminal.
 
 ### Specification
-The specification of this program is very simple: *the program only prints "Hello world!" and quits* (here the specification is as long as the program itself, but this is not always the case). The simplest way to write this specification is to describe an environment of the program which reacts to a single event: the printing of the message "Hello world!" on the terminal. You can express this environment as a program:
+The specification of this program is very straightforward: *the program only prints "Hello world!" and quits* (here the specification is as long as the program itself, but this is not always the case). A simple way to write this specification is to describe an environment of the program which reacts to a single event: the printing of the message "Hello world!" on the terminal. You can express this environment as a program:
 
     (** The Hello World program only says hello. *)
     Definition hello_world_ok : Run.t hello_world tt.
       apply (Run.log_ok (LString.s "Hello world!")).
     Defined.
 
-The specification `hello_world_ok` is of type `Run.t hello_world tt`: this runs the program `hello_world` returning the result `tt`. We apply the function `Run.log_ok` of the effects library which exactly describes an environment reacting to a single printing event.
+The specification `hello_world_ok` is of type `Run.t hello_world tt`: this runs the program `hello_world` returning the result `tt`. We apply the function `Run.log_ok` of the [effects library](http://clarus.github.io/doc/io-effects-unix/IoEffectsUnix.Unix.html#Run.log_ok) which exactly describes an environment reacting to a single printing event.
 
 This specification needs *no* proofs because it is valid *by construction*. We do not need any SMT solver, model checker or manual proof. The specification is valid because it is well-typed. Of course this example is very simple, so we will see a slightly more complex one.
 
