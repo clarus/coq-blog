@@ -94,5 +94,5 @@ This strategy is more clever but also more fragile. We use the branch mechanism 
 The OPAM for OCaml community did some work to obtain a bench system too. There are:
 
 * [OPAM Weather Service](http://ows.irill.org/): do not install the packages, only check the dependency constraints
-* [OPAM Bulk](http://www.recoil.org/~avsm/opam-bulk/): a prototype of bench system
-* [OCamlot](https://github.com/ocamllabs/ocamlot): a bench system (abandoned)
+* [OPAM Bulk](http://www.recoil.org/~avsm/opam-bulk/): a future bench system
+* [OCamlot](https://github.com/ocamllabs/ocamlot): a bench system (abandoned?)
