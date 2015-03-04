@@ -62,7 +62,7 @@ This should print you the message `test`!
 ## Parse the OPAM repository
 To write our script we need to understand the basics of how OPAM for Coq repositories are organized (for example the [repo-stable](https://github.com/coq/repo-stable)). All the packages are in the [packages](https://github.com/coq/repo-stable/tree/master/packages) folder. There is one folder per package name, all prefixed by `coq:` because we are in the Coq namespace. In each package folder there is one folder per version of the package, with three files `descr`, `opam` and `url` to describe the package.
 
-We describe a model of an OPAM repository in [src/Model.v](https://github.com/clarus/repos2web/blob/master/src/Model.v). In a first pass, we will generate an element of type `Packages.t`. This is a list of packages described by a name and a list of version. In a second pass, we will generate an element of type `FullPackages.t` adding the description of each version and computing the latest version using the [Debian ordering](http://manpages.ubuntu.com/manpages/quantal/man5/deb-version.5.html).
+We describe a model of an OPAM repository in [src/Model.v](https://github.com/clarus/repos2web/blob/master/src/Model.v). In a first pass, we will generate an element of type `Packages.t`. This is a list of packages described by a name and a list of version. In a second pass, we will generate an element of type `FullPackages.t` adding the description of each version and computing the latest version using the (complex) [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version).
 
 ### First pass
 The first pass is described in [src/Main.v](https://github.com/clarus/repos2web/blob/master/src/Main.v) in the `Basic` module. The function `list_coq_files` lists the files/folders in `folder` starting with the `coq:` prefix:
@@ -92,6 +92,45 @@ As described in [Tutorial: a Hello World in Coq](http://coq-blog.clarus.me/tutor
 * `list_files : LString.t -> C (option (list LString.t))`: list the content of a folder
 * `log : LString.t -> C unit`: print a message on the terminal
 
-The complete list of functions is available on [system API](http://clarus.github.io/doc/io-system/Io.System.System.html).
+The complete list of system functions is available on [system API](http://clarus.github.io/doc/io-system/Io.System.System.html).
+
+We continue by defining more functions until:
+
+    Definition get_packages (repository : LString.t) : C (option Packages.t) :=
+      let! names := list_coq_files repository in
+      match names with
+      | None => ret None
+      | Some names => get_packages_of_names repository names
+      end.
+
+to get the list of packages in a repository folder (or `None` in case of error).
 
 ### Second pass
+The second pass follow the same structure as the first one. The main trick is the function:
+
+    (** Return the latest version, using Debian `dpkg` for comparison. *)
+    Definition max_version (version1 version2 : Version.t) : C (option Version.t) :=
+      ...
+
+which uses the `dpkg` command line tool to compare two versions numbers according to the [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version). This tool should be available on most Linux distribution, even on those not based on [Debian](https://www.debian.org/).
+
+## Render HTML
+We define the HTML rendering in [src/View.v](https://github.com/clarus/repos2web/blob/master/src/View.v). The last function is:
+
+    Definition index (packages : FullPackages.t) : LString.t :=
+      header ++ title packages ++ table packages ++ footer.
+
+which pretty-print a list of packages to HTML. This function is pure (no inputs--outputs). There is nothing special about it, and we generate the page using the [Bootstrap CSS](http://getbootstrap.com/) to get a nice rendering.
+
+The updated `main` function in [src/Main.v](https://github.com/clarus/repos2web/blob/master/src/Main.v) combines the parsing and the rendering to write the output file in `html/index.html`:
+
+    Definition main (argv : list LString.t) : C unit :=
+      match argv with
+      | [_; repository] =>
+        ...
+      | _ => log (LString.s "Exactly one argument expected (the repository folder).")
+      end.
+
+We use the list of command line arguments `argv` to get the folder in which the OPAM repository is stored.
+
+Next time we will see how to specify this script and prove it correct reasoning by [use cases](http://en.wikipedia.org/wiki/Use_case).
