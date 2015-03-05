@@ -57,10 +57,20 @@ Compile and run the generated OCaml:
     make
     ./repos2web.native
 
-This should print you the message `test`!
+This should print you the message `test` on the terminal!
 
 ## Parse the OPAM repository
 To write our script we need to understand the basis of how OPAM for Coq repositories are organized (for example the [repo-stable](https://github.com/coq/repo-stable)). All the packages are in the [packages](https://github.com/coq/repo-stable/tree/master/packages) folder. There is one folder per package name, all prefixed by `coq:` because we are in the Coq namespace. In each package folder, there is one folder per version of the package with three files `descr`, `opam` and `url` to describe the package.
+
+    packages/
+      coq:list-string/
+        coq:list-string.1.0.0/
+          descr
+          opam
+          url
+        coq:list-string.2.0.0/
+          ...
+      ...
 
 We define the data type of an OPAM repository in [src/Model.v](https://github.com/clarus/repos2web/blob/master/src/Model.v). In a first pass, we will generate an element of type `Packages.t`. This is a list of packages described by a name and a list of versions. In a second pass, we will generate an element of type `FullPackages.t`, by adding the description of each version and by computing each latest version using the (complex) [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version).
 
@@ -114,13 +124,13 @@ The second pass follows the same structure as the first one. The main trick is t
 
 which uses the `dpkg` command line tool to compare two versions numbers according to the [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version). If you want to test it, the `dpkg` tool should be available on most Linux distribution, even on those which are not based on [Debian](https://www.debian.org/).
 
-## Render HTML
+## Render the HTML
 We define the HTML rendering in [src/View.v](https://github.com/clarus/repos2web/blob/master/src/View.v). The last function is:
 
     Definition index (packages : FullPackages.t) : LString.t :=
       header ++ title packages ++ table packages ++ footer.
 
-which pretty-prints a list of packages to HTML. This function is pure (no inputs--outputs), because the return type is not `C` of something. There is nothing special about the pretty-printing, and we generate the page using the [Bootstrap CSS](http://getbootstrap.com/) to get a nice rendering.
+which pretty-prints a list of packages to HTML. This function is pure (no inputs--outputs), because the return type is not `C` of something but `LString.t`. There is nothing special about the pretty-printing, and we generate the page using the [Bootstrap](http://getbootstrap.com/) CSS framework to get a nice rendering.
 
 The final `main` function in [src/Main.v](https://github.com/clarus/repos2web/blob/master/src/Main.v) combines the parsing and the rendering to write the output file in `html/index.html`:
 
@@ -144,6 +154,9 @@ The final `main` function in [src/Main.v](https://github.com/clarus/repos2web/bl
       | _ => log (LString.s "Exactly one argument expected (the repository folder).")
       end.
 
-We use the list of command line arguments `argv` to get the folder in which the OPAM repository is stored.
+We use the list of command line arguments `argv` to get the folder in which the OPAM repository is stored. You can add a Coq-ish theme downloading this Bootstrap CSS:
 
+    curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
+
+## Next time
 Next time we will see how to specify this script and prove it correct, using a reasoning by [use cases](http://en.wikipedia.org/wiki/Use_case).
