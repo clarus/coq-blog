@@ -35,7 +35,7 @@ So try not to rely too much on advanced features, and make your proofs scripts r
 ## Preprocess
 You can use preprocessing to solve breaking incompatibility changes. This helps to keep one code database, instead of splitting your developments with one branch per Coq version.
 
-Some people use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead, I recommend to go for simpler tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:
+Some people use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead, I recommend to go for simpler and more powerful tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:
 
     Definition proj (n : {n : nat & n >= 2}) : nat :=
       match n with
