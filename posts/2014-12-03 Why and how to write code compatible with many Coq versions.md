@@ -33,9 +33,9 @@ This is obvious but this must be emphasized: be clean and robust. Most Coq featu
 So try not to rely too much on advanced features, and make your proofs scripts robust (using [explicitly named variables](http://poleiro.info/posts/2013-11-17-automatic-naming-considered-harmful.html) or [bullets](http://poleiro.info/posts/2013-06-27-structuring-proofs-with-bullets.html) for example).
 
 ## Preprocess
-You should use preprocessing to solve breaking incompatibility changes. This helps to keep one code database, instead of splitting your developments with one branch per Coq version.
+You can use preprocessing to solve breaking incompatibility changes. This helps to keep one code database, instead of splitting your developments with one branch per Coq version.
 
-Some people still use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead, you should go for more modern tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:
+Some people use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead, I recommend to go for simpler tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:
 
     Definition proj (n : {n : nat & n >= 2}) : nat :=
       match n with
