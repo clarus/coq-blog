@@ -1,7 +1,7 @@
 We will explain how to write scripts in [Coq](https://coq.inria.fr/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator. This generator parses an [OPAM](http://opam.ocaml.org/) repository with Coq packages (for example, the [repo-stable](https://github.com/coq/repo-stable)) and generates an HTML page (see the [repo-stable page](http://clarus.github.io/repos2web/)).
 
 ## Get started
-Install the [coq:io:system](https://github.com/clarus/io-system) package with [OPAM](http://coq-blog.clarus.me/use-opam-for-coq.html) to enable the system effects:
+Install the [coq:io:system](https://github.com/clarus/io-system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
 
     opam repo add coq-stable https://github.com/coq/repo-stable.git
     opam install coq:io:system

@@ -14,7 +14,7 @@ By default the OPAM packages are installed in `~/.opam`. You can also have many 
 
     mkdir opam
     opam init --root=opam # answer no to the question
-    eval `opam config --root=opam env` # set the environment variables for this shell session
+    eval `opam config --root=opam env` # set the env variables for this shell session
 
 ## Add the repositories
 Now you can add the Coq [stable repository](https://github.com/coq/repo-stable):
@@ -25,7 +25,7 @@ The stable repository contains only released packages. There is also the [unstab
 
     opam repo add coq-unstable https://github.com/coq/repo-unstable.git
 
-There is also the [coqs repository](https://github.com/coq/repo-coqs) with development versions of Coq:
+The [coqs repository](https://github.com/coq/repo-coqs) contains development versions of Coq:
 
     opam repo add coqs https://github.com/coq/repo-coqs.git
 
@@ -38,8 +38,6 @@ To install a package:
 
     opam install coq:ssreflect
 
-If the package is slow to install (for instance, Coq itself), you can always use the `--jobs=` option:
+If the package is slow to install (for instance, Coq itself), you can always use the `-j` option:
 
-    opam install --jobs=6 coq
-
-A website to list all the available packages, in the style of [opam.ocaml.org](http://opam.ocaml.org/), should be available soon.
+    opam install -j6 coq
