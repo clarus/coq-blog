@@ -3,13 +3,13 @@ Last time, in [Write a script in Coq](http://coq-blog.clarus.me/write-a-script-i
 ## Unit testing, revisited
 A common practice to check programs is to write [unit tests](http://en.wikipedia.org/wiki/Unit_testing). For each function, a test is written to execute it on some particular inputs, and to check that the results are what we expect. On more complex programs, we also need to simulate the inputs--outputs with the users, a database, the network, ... To solve this problem, programmers invented solutions like the [mock objects](http://en.wikipedia.org/wiki/Mock_object) which are basically implementations of fake execution environments.
 
-Unfortunately tests are not exhaustive, since the set of program inputs is usually infinite. Methods like [random testing](http://en.wikipedia.org/wiki/Random_testing) can extend the range of tested configurations, but are always limited to a finite set of inputs.
+Unfortunately tests are not exhaustive since the set of program inputs is usually infinite. Methods like [random testing](http://en.wikipedia.org/wiki/Random_testing) can extend the range of tested configurations, but are always limited to a finite set of inputs.
 
-We will explain how to write tests in Coq by writing *scenarios* which formalize [use cases](http://en.wikipedia.org/wiki/Use_case). We will show that they are always *exhaustive*. This completeness is given us for free, thanks to the strict type-system of Coq: in our settings, a scenario is correct if it is well-typed so there is no need to run it on its (infinite) set of parameters.
+We will explain how to write exhaustive tests in Coq by writing *scenarios* which formalize the notion of [use cases](http://en.wikipedia.org/wiki/Use_case). The completeness of the scenarios is given us for free, thanks to the strict type-system of Coq: in our settings, a scenario is correct if it is well-typed so that there is no need to run it on its (infinite) set of parameters.
 
 To the best of our knowledge, Coq is the only language with formal verification of use cases.
 
-**Remark:** some people are used to specify programs with pre/post-conditions or invariants, rather than by [use cases](http://en.wikipedia.org/wiki/Use_case). We believe that these approaches are pertinent for algorithms but not for interactive programs, because (from our experience) these forms of specifications are less natural than the specifications by use cases. This seems counter-intuitive because use-cases do not cover all the execution paths. But we have to remember that:
+**Remark:** some people are used to specify programs with pre/post-conditions or invariants, rather than by [use cases](http://en.wikipedia.org/wiki/Use_case). We believe that these approaches are pertinent for algorithms but not for interactive programs, because (from our experience) these specifications are less natural than the specifications by use cases. This seems counter-intuitive because use-cases do not cover all the execution paths. But we have to remember that:
 
 * the Coq type system protects us from bad behaviors in all execution paths,
 * there are often hypothesis on the environment, so all execution paths may not be interesting,
@@ -50,7 +50,7 @@ we know that the function `get_packages` will call the function `get_packages_of
 
     apply (get_packages_of_names_ok repository packages).
 
-Since Coq tells us there nothing more to do, we conclude by:
+Coq tells us there nothing more to do, so we conclude by:
 
     Defined.
 
