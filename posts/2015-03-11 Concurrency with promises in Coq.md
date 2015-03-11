@@ -1,4 +1,4 @@
-We will present two simple primitives to write concurrent (and interactive) programs in [Coq](http://coq.inria.fr/). We will show how to verify programs written using these primitive. Finally, we will stress the current limitations of our framework.
+We will present two primitives to write concurrent (and interactive) programs in [Coq](http://coq.inria.fr/), using the concept of [promises](http://en.wikipedia.org/wiki/Futures_and_promises). We will also show how to formally verify programs written using promises.
 
 ## Primitives for concurrency
 To write an application doing inputs--outputs, we quickly need some sorts of non-blocking ways to do inputs--outputs. There are many approaches to do concurrency, for example:
@@ -51,8 +51,13 @@ The `First` operator is defined as:
 
     | First : forall {A B : Type}, t E A -> t E B -> t E (A + B)
 
-## Specification of concurrency
+The program `First x y` runs the two computations `x` and `y` in parallel and returns the result of the first one which terminated. The other one is canceled.
 
-## Example
+This operator is dangerous because one of your computations may get canceled. It is mainly there to implement timeouts. To run a computation `slow` which may not terminate or take too much time, we can combine it with a timeout, writing something like:
 
-## Benchmark
+    First slow (sleep 10)
+
+to make sure the program terminates after 10 seconds, if `sleep 10` is the computation which does nothing but terminating after 10 seconds.
+
+## Specification of promises
+
