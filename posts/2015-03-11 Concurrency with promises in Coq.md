@@ -1,7 +1,7 @@
 We will present two primitives to write concurrent (and interactive) programs in [Coq](http://coq.inria.fr/), using the concept of [promises](http://en.wikipedia.org/wiki/Futures_and_promises). We will also show how to formally specify programs written using promises.
 
 ## Primitives for concurrency
-To write an interactive application we quickly need some sorts of non-blocking ways to do inputs--outputs operations. There are many approaches to do non-blocking calls or concurrency, for example:
+To write an interactive application we quickly need a way to do non-blocking inputs--outputs operations. There are many approaches to do non-blocking operations or concurrency, for example:
 
 * blocking calls in system threads
 * a main event loop
@@ -9,10 +9,10 @@ To write an interactive application we quickly need some sorts of non-blocking w
 * [promises](http://en.wikipedia.org/wiki/Futures_and_promises)
 * the [actor model](http://en.wikipedia.org/wiki/Actor_model)
 
-We will use promises to start with, in the style of the [Lwt library](http://ocsigen.org/lwt/) for [lightweight threads](http://en.wikipedia.org/wiki/Light-weight_process) in [OCaml](https://ocaml.org/). The promises have the advantage to be efficient because they can be implemented with an event loop instead of with system threads, while being simpler to use than an event loop or callbacks. The actor model is another interesting approach which we will study later.
+We chose to use promises, in the style of the [Lwt library](http://ocsigen.org/lwt/) for [lightweight threads](http://en.wikipedia.org/wiki/Light-weight_process) in [OCaml](https://ocaml.org/). The promises can be implemented efficiently using lightweight threads, while being simpler to use than an event loop or callbacks. The actor model is another interesting approach which we will study later.
 
 ### Sequential computations
-We recall the definition of our interactive sequential computation (see the [coq:io](https://github.com/clarus/io) package):
+We recall the definition of our interactive sequential computations (see the [coq:io](https://github.com/clarus/io) package):
 
     Module C.
       Inductive t (E : Effects.t) : Type -> Type :=
@@ -44,7 +44,7 @@ We add the `Join` operator to the computations:
 
 The program `Join x y` runs the two computations `x` and `y` in parallel and returns the couple of their results. Since the two computations are launched concurrently, blocking calls made in `x` will not block calls in `y`, and reciprocally. This is the main operator we will use to write concurrent programs.
 
-Note that since our programs are pure, there are no shared states between `x` and `y`. We will see in a future post how to handle a shared state in a concurrent program in Coq.
+Note that since our programs are pure, there are no shared states between `x` and `y`. We will see in a future post how to represent a shared state in a concurrent program in Coq.
 
 ### First
 The `First` operator is defined as:
@@ -53,11 +53,11 @@ The `First` operator is defined as:
 
 The program `First x y` runs the two computations `x` and `y` in parallel and returns the result of the first which terminated. The other may be canceled.
 
-This operator is dangerous because one of our computations can get canceled. The `First` primitive is mainly there to implement timeouts. If we want to run a computation `slow` which may not terminate or take too much time, we can combine this computation with a timeout, writing something like:
+This operator is dangerous because one of our computations can get canceled. The `First` primitive is mainly there to implement timeouts. If we want to run a computation `slow` which may not terminate or may take too much time, we can combine this computation with a timeout by writing something like:
 
     First slow (sleep 10)
 
-to make sure the program terminates after 10 seconds, supposing that `sleep 10` is the computation which does nothing but terminating after 10 seconds.
+to make sure the program terminates after 10 seconds (we suppose that `sleep 10` is the computation which does nothing but terminating after 10 seconds).
 
 ## Specification of promises
 We specify our computations using [use-cases](http://en.wikipedia.org/wiki/Use_case) described by runs:
@@ -73,7 +73,7 @@ We specify our computations using [use-cases](http://en.wikipedia.org/wiki/Use_c
 
 You can see an example of specification using runs in [Formally verify a script in Coq](http://coq-blog.clarus.me/formally-verify-a-script-in-coq.html). The main idea is that a universally quantified run can be viewed as the formal specification of a use-case. This kind of specification is verified just by typing, using lemma on equalities when the type-checker fails.
 
-A run can be a run of:
+A run can be a run of the computation:
 
 * `Ret x`, the pure value `x` returned by the computation
 * `Call command`, an answer to this command
@@ -89,7 +89,7 @@ We define the run of a `Join` by:
 
 This means that a run of `Join x y` is a couple of runs for `x` and `y`. Equivalently, a specification of `Join x y` is a couple of specifications for `x` and for `y`.
 
-*A priori*, there are no constraints on how the threads `x` and `y` could interact. This is up to the user to express these constraints in the specification, if there are some.
+*A priori*, the interactions of the threads `x` and `y` are not specified. This is up to the user to express these interactions in the specification, if there are some.
 
 ### First
 There are two ways to run a `First`:
@@ -101,7 +101,7 @@ There are two ways to run a `First`:
 
 A run of `First x y` is either a run of `x` (the `Left` case) or a run of `y` (the `Right` case). Equivalently, a specification of `First x y` is a specification of `x` or a specification of `y`.
 
-We could ask: yes, but sometimes both `x` and `y` are actually executed! And if we choose the `Left` case for example, we should program `x` instead of `First x y` to start with. These are the same concerns we could have for the definition of the *logical disjunction* in Coq:
+We could ask: yes, but sometimes both `x` and `y` are actually executed! And if we choose the `Left` case for example, we should program `x` instead of `First x y` to start with. These are the same concerns we may have for the definition of the *logical disjunction* in Coq:
 
     Inductive or (A B : Prop) : Prop :=
     | or_introl : A -> A \/ B
@@ -109,7 +109,7 @@ We could ask: yes, but sometimes both `x` and `y` are actually executed! And if 
 
     where "A \/ B" := (or A B) : type_scope.
 
-and the reasons of this definition are the same.
+and the reasons of these definitions are similar.
 
 ## Next time
 Next time we will see how to implement the primitives `Join` and `First`, to write efficient and non-blocking interactive programs in Coq.
