@@ -112,4 +112,4 @@ We could ask: yes, but sometimes both `x` and `y` are actually executed! And if 
 and the reasons of these definitions are similar.
 
 ## Next time
-Next time we will see how to implement the primitives `Join` and `First`, to write efficient and non-blocking interactive programs in Coq.
+Next time we will see how to implement the primitives `Join` and `First`, to generate efficient and non-blocking interactive programs written in Coq.
