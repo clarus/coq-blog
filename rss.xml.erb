@@ -6,7 +6,7 @@
     <link><%= blog.url %></link>
     <lastBuildDate><%= Time.new.strftime("%a, %d %b %Y %H:%M:%S %z") %></lastBuildDate>
     <atom:link href="<%= blog.url %>rss.xml" rel="self" type="application/rss+xml" />
-    <% blog.posts[0..4].each do |post| %>
+    <% blog.posts.each do |post| %>
       <item>
         <title><%= h post.name %></title>
         <pubDate><%= post.date.strftime("%a, %d %b %Y %H:%M:%S %z") %></pubDate>
