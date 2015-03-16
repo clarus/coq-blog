@@ -60,4 +60,4 @@ The Coq type-checker accepts our scenario which means it is valid: we do not nee
 We proved that, for any list of OPAM packages, given the "right answers" from the file system, the function `get_packages` will terminate without errors and will return `Some packages`. The "right answers" are defined by giving the "right answers" to `list_coq_files` and then giving the "right answers" to `get_packages_of_names`.
 
 ## Next time
-We have seen how to formally verify an interactive program in Coq. Next time we will see how to optimize this program using concurrency.
+We have seen how to formally verify an interactive program in Coq. [Next time](http://coq-blog.clarus.me/concurrency-with-promises-in-coq.html) we will see how to optimize this program using concurrency.

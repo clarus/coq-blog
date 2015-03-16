@@ -159,4 +159,4 @@ We use the list of command line arguments `argv` to get the folder in which the 
     curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
 
 ## Next time
-We have seen how to write a script in Coq doing file manipulations. Next time we will see how to specify this script and prove it correct, using a reasoning by [use cases](http://en.wikipedia.org/wiki/Use_case).
+We have seen how to write a script in Coq doing file manipulations. [Next time](http://coq-blog.clarus.me/formally-verify-a-script-in-coq.html) we will see how to specify this script and prove it correct, using a reasoning by [use cases](http://en.wikipedia.org/wiki/Use_case).
