@@ -19,10 +19,10 @@ You can now write the *Hello World*:
     Import C.Notations.
 
     (** The classic Hello World program. *)
-    Definition hello_world (argv : list LString.t) : C.t System.effects unit :=
+    Definition hello_world (argv : list LString.t) : C.t System.effect unit :=
       System.log (LString.s "Hello world!").
 
-We load some libraries and write the `hello_world` program by calling the `System.log` function. The return type is `C.t System.effects unit`, which means this is a *impure* computation with *System* effects and returning a value of type `unit`. The command line arguments are given in the list of strings `argv`, but not used here.
+We load some libraries and write the `hello_world` program by calling the `System.log` function. The return type is `C.t System.effect unit`, which means this is a *impure* computation with *System* effects and returning a value of type `unit`. The command line arguments are given in the list of strings `argv`, but not used here.
 
 To compile the `hello_world` program we add:
 
@@ -52,7 +52,7 @@ This specification needs *no* proofs because it is valid *by construction*. We d
 This program asks for your name and replies with your name:
 
     (** Ask for the user name and answer hello. *)
-    Definition your_name (argv : list LString.t) : C.t System.effects unit :=
+    Definition your_name (argv : list LString.t) : C.t System.effect unit :=
       do! System.log (LString.s "What is your name?") in
       let! name := System.read_line in (* Ask the name. *)
       match name with
