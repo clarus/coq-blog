@@ -26,7 +26,7 @@ We load some libraries and write the `hello_world` program by calling the `Syste
 
 To compile the `hello_world` program we add:
 
-    Definition main := Extraction.run hello_world.
+    Definition main := Extraction.launch hello_world.
     Extraction "extraction/main" main.
 
 to generate an [OCaml](https://ocaml.org/) file `main.ml`. We compile and run this file:
