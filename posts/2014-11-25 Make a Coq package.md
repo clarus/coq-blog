@@ -9,9 +9,7 @@ to see what you did and use it.
 We assume you already know how to use OPAM to install Coq packages. If not, you can read this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html).
 
 ## Create a project
-Go on [GitHub](https://github.com/) and make a new project, for example `that-super-proof`. To have the best chances to get contributions and remarks, it is a good practice to always chose the tools that most people use. Today, GitHub is the most popular hosting platform for projects, and a pull-request (external contribution) is a matter of a click.
-
-Clone your repository. Add an `LICENSE` file with your copyright to make your package open-source (according to the law, a code is considered proprietary by default). The [MIT](http://opensource.org/licenses/MIT) license is one of the most permissive and popular licenses:
+Go on [GitHub](https://github.com/) and make a new project, for example `that-super-proof`. Add a `LICENSE` file with your copyright if you want to make your package open-source (without a license a code is proprietary). I usually choose the [MIT](http://opensource.org/licenses/MIT) license, as one of the most permissive and popular:
 
     The MIT License (MIT)
 
@@ -47,27 +45,27 @@ You can now commit your work.
 If your project is a Coq plugin (containing [OCaml](https://ocaml.org/) files), you can get inspiration from the [Constructors](https://github.com/mattam82/Constructors) project of [Matthieu Sozeau](http://www.pps.univ-paris-diderot.fr/~sozeau/). This is an example of a simple OCaml plugin, including the branches `v8.4` and `v8.5` for compatibility with the different versions of Coq.
 
 ## Compile
-We will use `coq_makefile`. Add a project file `Make`:
+We will use `coq_makefile` to generate a Makefile. Create a file `Make`:
 
     -R . ThatSuperProof
 
     All.v
 
-and an executable script `configure.sh`:
+and an executable file `configure.sh`:
 
     #!/bin/sh
 
     coq_makefile -f Make -o Makefile
 
-Compile with:
+To compile your project, run:
 
     ./configure.sh
     make
 
-Coq Makefile is clever and also generates an `install` rule, among over things.
+`coq_makefile` is clever and also generates an `install` rule, among over things.
 
 ## Publish a development version
-We will first publish a package on the unstable repository. We need to do a pull-request to add a new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/)). Fork the [unstable repository](https://github.com/coq/repo-unstable) and add a folder `coq:that-super-proof/coq:that-super-proof.dev` in `packages/`. All packages must be in small caps, in the `coq:` namespace. You can also use your own `coq:name:` namespace for bigger projects.
+We first publish a development version. We will do a pull-request to add our new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/) if you need help). Fork the [OPAM Coq repository](https://github.com/coq/opam-coq-archive) and add a folder `coq:that-super-proof/coq:that-super-proof.dev` in `extra-dev/packages/`. All package names must be in small caps and in the `coq:` namespace. You can also use your own `coq:name:` namespace for bigger projects.
 
 A package is described by three files:
 
@@ -96,16 +94,16 @@ A package is described by three files:
 
         git: "https://github.com/myself/that-super-proof"
 
-You can test your own fork of the unstable repository using `opam repo add` on your fork. Then, issue a pull-request with your new package. It should be accepted quickly since there is no reviewing on the unstable repository (we only check there is no `rm -Rf` or so).
+You can test your own fork of the OPAM Coq repository using `opam repo add` on the folder `extra-dev` of your fork. Then, issue a pull-request with your new package.
 
-## Make a stable version
-To publish a stable version you need to make a release. A release with a version number allows people to express reliable dependencies to your work. In GitHub, go to the *releases* section and add a new release named `1.0.0`. For version names we recommend the [SemVer](http://semver.org/) convention, `MAJOR.MINOR.PATCH` with:
+## Publish a stable version
+To publish a stable version you need to make a release. In GitHub, go to the *releases* section and add a new release named `1.0.0`. People tend to use the [SemVer](http://semver.org/) convention for the version names, as `MAJOR.MINOR.PATCH`:
 
-* `MAJOR`: breaking changes
-* `MINOR`: non-breaking changes
+* `MAJOR`: major changes
+* `MINOR`: minor changes
 * `PATCH`: bug fixes
 
-Fork the [stable repository](https://github.com/coq/repo-stable) and add a folder `coq:that-super-proof/coq:that-super-proof.1.0.0` in `packages/`. Add the `descr` and `opam` files as before and a new `url` file:
+Add a folder `coq:that-super-proof/coq:that-super-proof.1.0.0` in the folder `released/packages/` of the [OPAM Coq repository](https://github.com/coq/opam-coq-archive). Add the `descr` and `opam` files as before and a new `url` file:
 
     http: "https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz"
     checksum: "da1da74c8f6c560b153ab8dc558cf29e"
@@ -114,7 +112,7 @@ The MD5 checksum is mandatory, and can be obtained with:
 
     curl -L https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz |md5sum
 
-Make a pull-request with your package. We will check it is compiling and accept it.
+Make a pull-request with your package so that it can be accepted.
 
 ## Use the bench
-There is a bench system available on [coq-bench.github.io](http://coq-bench.github.io/). We test all the packages for each version of Coq. We host this service to help you to check that your packages compile for each platform, even development ones. Compatibility across versions is not necessary but allows you to reach more users. And you can always specify the Coq versions you depend upon in the `depends` field of your `opam` files.
+There is a bench system available on [coq-bench.github.io](http://coq-bench.github.io/). We test all the packages for each version of Coq. We host this service to help you to check that your packages compile for each platform, even development ones. Compatibility across versions is not necessary but allows you to reach more users. You can specify the Coq versions you depend upon in the `depends` field of your `opam` files.
