@@ -1,35 +1,37 @@
-Coq now has its package manager: [OPAM](http://opam.ocamlpro.com/). This is already the package manager of [OCaml](https://ocaml.org/) so it was the natural choice for us, since Coq and its plugins are already coded in OCaml.
+Now Coq has its package manager: [OPAM](http://opam.ocamlpro.com/). This is already the package manager of [OCaml](https://ocaml.org/) so it was the natural choice for us, since Coq and its plugins are already coded in OCaml.
 
 ## Install OPAM
-Install OPAM by your preferred method. It is recommended to use at least the version (`1.2.1` as of March 18, 2015), which can be installed from the sources:
+Install OPAM by your preferred method. It is recommended to use at least the version (`1.2.2` as of May 7, 2015), which can be installed from the sources:
 
-    curl -L https://github.com/ocaml/opam/archive/1.2.1.tar.gz |tar -xz
-    cd opam-1.2.1
+    curl -L https://github.com/ocaml/opam/archive/1.2.2.tar.gz |tar -xz
+    cd opam-1.2.2
     ./configure
     make lib-ext
     make
     sudo make install
 
-By default the OPAM packages are installed in `~/.opam`. You can also have many installation folders. A good practice is to have one installation folder per project. Then your are safe if you need different versions of Coq or packages for each project. To configure OPAM for the current folder:
+By default the OPAM packages are installed in `~/.opam`. You can also have many installation folders if you want many versions of Coq or packages. A good practice is to have one installation folder per project or configuration. To configure OPAM in a new folder `opam`:
 
     mkdir opam
     opam init --root=opam # answer no to the question
-    eval `opam config env --root=opam` # set the env variables for this shell session
+    eval `opam config env --root=opam` # run this command for each shell session
 
-**Remark:** Some people from OCaml are more used to the `switch` mechanism to handle many OPAM installations.
+**Remark:** Some people use the `switch` mechanism to handle many OPAM installations.
 
 ## Add the repositories
-Now you can add the Coq [stable repository](https://github.com/coq/repo-stable):
+To add the repository for the Coq packages:
 
-    opam repo add coq-stable https://github.com/coq/repo-stable.git
+    opam repo add coq-released https://coq.inria.fr/opam/released
 
-The stable repository contains only released packages. There is also the [unstable repository](https://github.com/coq/repo-unstable) for development versions. You should use it at your own risks:
+There is also a repository for the development versions. Use it at your own risks:
 
-    opam repo add coq-unstable https://github.com/coq/repo-unstable.git
+    opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
 
-The [coqs repository](https://github.com/coq/repo-coqs) contains development versions of Coq:
+To add the development versions of Coq:
 
-    opam repo add coqs https://github.com/coq/repo-coqs.git
+    opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
+
+**Remark:** There is also a distribution mechanism with [Coq Shell](https://github.com/coq/opam-coq-shell), but not all the packages are available.
 
 ## Install a package
 The Coq packages are in the namespace `coq:`. To list all of them:
@@ -38,8 +40,12 @@ The Coq packages are in the namespace `coq:`. To list all of them:
 
 To install a package:
 
-    opam install coq:ssreflect
+    opam install coq:io:hello-world
 
-If the package is slow to install (for instance, Coq itself), you can always use the `-j` option:
+To specify the version you want to install:
 
-    opam install -j6 coq
+    opam install coq:io:hello-world.1.1.0
+
+If the package is slow to install (for instance, Coq itself), use the `-j` option to speed it up and `-v` to see the progress:
+
+    opam install -j4 -v coq
