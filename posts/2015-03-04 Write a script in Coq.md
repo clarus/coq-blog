@@ -1,9 +1,9 @@
-We will explain how to write scripts in [Coq](https://coq.inria.fr/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator. This generator parses an [OPAM](http://opam.ocaml.org/) repository with Coq packages (for example, the [repo-stable](https://github.com/coq/repo-stable)) and generates an HTML page (see the [repo-stable page](http://clarus.github.io/repos2web/)).
+We will explain how to write scripts in [Coq](https://coq.inria.fr/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator. This generator parses an [OPAM](http://opam.ocaml.org/) repository with Coq packages and generates an HTML page (see the [repo2web page](http://clarus.github.io/repos2web/)).
 
 ## Get started
 Install the [coq:io:system](https://github.com/clarus/io-system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
 
-    opam repo add coq-stable https://github.com/coq/repo-stable.git
+    opam repo add coq-released https://coq.inria.fr/opam/released
     opam install coq:io:system
 
 Create an empty Coq project by adding the following files in a fresh directory:
@@ -60,7 +60,7 @@ Compile and run the generated OCaml:
 This should print you the message `test` on the terminal!
 
 ## Parse the OPAM repository
-To write our script we need to understand the basis of how OPAM for Coq repositories are organized (for example the [repo-stable](https://github.com/coq/repo-stable)). All the packages are in the [packages](https://github.com/coq/repo-stable/tree/master/packages) folder. There is one folder per package name, all prefixed by `coq:` because we are in the Coq namespace. In each package folder, there is one folder per version of the package with three files `descr`, `opam` and `url` to describe the package.
+To write our script we need to understand the basis of how OPAM for Coq repositories are organized (for example in [opam-coq-archive](https://github.com/coq/opam-coq-archive)). All the packages are in the `packages` folders. There is one folder per package name, all prefixed by `coq:` because we are in the Coq namespace. In each package folder, there is one folder per version of the package with three files `descr`, `opam` and `url` to describe the package.
 
     packages/
       coq:list-string/

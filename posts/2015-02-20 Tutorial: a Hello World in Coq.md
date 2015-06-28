@@ -5,7 +5,7 @@ The *Hello World* program exists in almost every languages, including [in White 
 ## Hello World
 Using [OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html), install the package [coq:io:system](https://github.com/clarus/io-system):
 
-    opam repo add coq-stable https://github.com/coq/repo-stable.git
+    opam repo add coq-released https://coq.inria.fr/opam/released
     opam install coq:io:system
 
 You can now write the *Hello World*:

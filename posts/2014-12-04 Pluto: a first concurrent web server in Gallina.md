@@ -7,8 +7,8 @@ For now [Pluto](https://github.com/coq-concurrency/pluto) can serve static websi
 ## Use
 The simplest way to install [Pluto](https://github.com/coq-concurrency/pluto) is to use [OPAM](http://opam.ocamlpro.com/) for Coq. See this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html) for more informations. Add the stable and unstable repositories:
 
-    opam repo add coq-stable https://github.com/coq/repo-stable.git
-    opam repo add coq-unstable https://github.com/coq/repo-unstable.git
+    opam repo add coq-released https://coq.inria.fr/opam/released
+    opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
 
 Install Pluto:
 

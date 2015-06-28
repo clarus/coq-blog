@@ -20,8 +20,8 @@ In an other terminal, for the unstable Coq:
     mkdir opam.dev
     opam init --root=opam.dev
     eval `opam config --root=opam.dev env`
-    opam repo add coqs https://github.com/coq/repo-coqs.git
-    opam install --jobs=4 coq.dev
+    opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
+    opam install -j4 -v coq.dev
 
 You have now a different version of Coq in each terminal, and can test your code for two versions. If you have an old computer, and may be afraid of having many Coq installations for each project, remember you can always use cache mechanisms like the one provided by [Docker](https://www.docker.com/) to save disk space.
 
