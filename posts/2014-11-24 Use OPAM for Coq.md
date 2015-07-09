@@ -1,4 +1,4 @@
-[OPAM](http://opam.ocamlpro.com/) a package manager edited by [OCamlPro](http://www.ocamlpro.com/). We will describe how to use it to handle [Coq](https://coq.inria.fr/) packages.
+[OPAM](http://opam.ocamlpro.com/) is a package manager edited by [OCamlPro](http://www.ocamlpro.com/). We will describe how to use it to handle [Coq](https://coq.inria.fr/) packages.
 
 ## Install OPAM
 Install OPAM by your preferred method. It is recommended to use the latest version (`1.2.2` as of May 7, 2015), which can be installed from the sources:
