@@ -1,4 +1,6 @@
-Last time, in [Write a script in Coq](http://coq-blog.clarus.me/write-a-script-in-coq.html), we explained how to implement scripts in [Coq](https://coq.inria.fr/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator for [OPAM](http://opam.ocaml.org/) repositories. We will see how to specify and prove correct this script.
+Last time, in [Write a script in Coq](http://coq-blog.clarus.me/write-a-script-in-coq.html), we explained how to implement scripts in [Coq](https://coq.inria.fr/) using [Coq.io](http://coq.io/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator for [OPAM](http://opam.ocaml.org/) repositories. We will see how to specify and prove correct this script.
+
+*There is now a newer OPAM website generator [opam-website](https://github.com/coq-io/opam-website). See the results on [coq.io/opam](http://coq.io/opam/).*
 
 ## Unit testing, revisited
 A common practice to check programs is to write [unit tests](http://en.wikipedia.org/wiki/Unit_testing). For each function, a test is written to execute it on some particular inputs, and to check that the results are what we expect. On more complex programs, we also need to simulate the inputs--outputs with the users, a database, the network, ... To solve this problem, programmers invented solutions like the [mock objects](http://en.wikipedia.org/wiki/Mock_object) which are basically implementations of fake execution environments.

@@ -1,4 +1,4 @@
-We will present two primitives to write concurrent (and interactive) programs in [Coq](http://coq.inria.fr/), using the concept of [promises](http://en.wikipedia.org/wiki/Futures_and_promises). We will also show how to formally specify programs written using promises.
+We will present two primitives to write concurrent (and interactive) programs in [Coq](http://coq.inria.fr/), using the concept of [promises](http://en.wikipedia.org/wiki/Futures_and_promises) in the library [Coq.io](http://coq.io/). We will also show how to formally specify programs written using promises.
 
 ## Primitives for concurrency
 To write an interactive application we quickly need a way to do non-blocking inputs--outputs operations. There are many approaches to do non-blocking operations or concurrency, for example:
@@ -12,7 +12,7 @@ To write an interactive application we quickly need a way to do non-blocking inp
 We chose to use promises, in the style of the [Lwt library](http://ocsigen.org/lwt/) for [lightweight threads](http://en.wikipedia.org/wiki/Light-weight_process) in [OCaml](https://ocaml.org/). The promises can be implemented efficiently using lightweight threads, while being simpler to use than an event loop or callbacks. The actor model is another interesting approach which we will study later.
 
 ### Sequential computations
-We recall the definition of our interactive sequential computations (see the [coq:io](https://github.com/clarus/io) package):
+We recall the definition of our interactive sequential computations (see the [coq:io](https://github.com/coq-io/io) package):
 
     Module C.
       Inductive t (E : Effects.t) : Type -> Type :=
@@ -35,7 +35,7 @@ The effects are a type of `command` and a type of `answer`, dependent on the val
 * `Call command`, the call to a command
 * `Let x f`, the evaluation of `x`, followed by the evaluation of `f` applied to the result of `x`
 
-The `Let` operator is also called the *bind* in the terminology of [monads](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). The effects `E` typically represent external calls to the system. You can for example look at the [API](http://clarus.github.io/doc/io-system/Io.System.System.html) of the [coq:io:system](https://github.com/clarus/io-system) library, which provides basic calls to manipulates files and the terminal.
+The `Let` operator is also called the *bind* in the terminology of [monads](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). The effects `E` typically represent external calls to the system. You can for example look at the [API](http://clarus.github.io/doc/io-system/Io.System.System.html) of the [coq:io:system](https://github.com/coq-io/system) library, which provides basic calls to manipulates files and the terminal.
 
 ### Join
 We add the `Join` operator to the computations:

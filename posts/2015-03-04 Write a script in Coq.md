@@ -1,7 +1,9 @@
-We will explain how to write scripts in [Coq](https://coq.inria.fr/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator. This generator parses an [OPAM](http://opam.ocaml.org/) repository with Coq packages and generates an HTML page (see the [repo2web page](http://clarus.github.io/repos2web/)).
+We will explain how to write scripts in [Coq](https://coq.inria.fr/) using the library [Coq.io](http://coq.io/) with the example of [repos2web](https://github.com/clarus/repos2web), a website generator. This generator parses an [OPAM](http://opam.ocaml.org/) repository with Coq packages and generates an HTML page.
+
+*There is now a newer OPAM website generator [opam-website](https://github.com/coq-io/opam-website). See the results on [coq.io/opam](http://coq.io/opam/).*
 
 ## Get started
-Install the [coq:io:system](https://github.com/clarus/io-system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
+Install the [coq:io:system](https://github.com/coq-io/system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
 
     opam repo add coq-released https://coq.inria.fr/opam/released
     opam install coq:io:system
