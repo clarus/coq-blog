@@ -40,3 +40,5 @@ The complete list of maps in the package [CUnit](https://github.com/clarus/coq-c
 * `List.map_pair {A B C} (f : A -> B -> C) (l : list (A * B)) : list C`
 * `List.map_triple {A B C D} (f : A -> B -> C -> D) (l : list (A * B * C)) : list D`
 * `List.map_quad {A B C D E} (f : A -> B -> C -> D -> E) (l : list (A * B * C * D)) : list E`
+
+*Edit: this list of functions can be generalized to an arbitrary number of arguments. See the post [Currying using Canonical Structures](http://gallais.github.io/blog/canonical-structures-currying.html) of [Guillaume Allais](http://gallais.github.io/).*
