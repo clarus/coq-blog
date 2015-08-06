@@ -4,7 +4,7 @@ include ERB::Util
 
 class Blog
   attr_reader :title, :url, :disqus, :posts
-  
+
   def initialize(title, url, disqus)
     @title, @url, @disqus = title, url, disqus
     @posts = Dir.glob("posts/*.md").map {|file_name| Post.new(file_name)}
@@ -22,7 +22,7 @@ end
 
 class Post
   attr_reader :name, :date, :html, :url
-  
+
   def initialize(file_name)
     if /\A(\d+)-(\d+)-(\d+)\s*(.*)\z/ === File.basename(file_name, ".md") then
       @date = Time.local($1, $2, $3)
