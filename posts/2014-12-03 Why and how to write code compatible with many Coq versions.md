@@ -80,4 +80,5 @@ To preprocess this `Test.v.erb` file, create a `pp.rb` file at the root of your 
 
 The command `ruby pp.rb` will then compile all the files matching `*.v.erb` to `*.v`.
 
-As mentioned in the comments, the main drawback of preprocessing is that you cannot use it with an interactive IDE. The only solution is to edit the `.v` files in the IDE for one specific version of Coq, and do back-and-forths with the `.v.erb` files to add compatibility.
+**Edit from the comments:**
+To integrate preprocessing with an IDE, you can use the [ProofGeneral's plugin](https://gist.github.com/cpitclaudel/2c75c8dc88b0e1c9a6e7) of [Clément Pit-Claudel](http://pit-claudel.fr/clement/). For other IDEs, the only solution is to edit the `.v` files in the IDE for one specific version of Coq, and do back-and-forths with the `.v.erb` files to add compatibility.
