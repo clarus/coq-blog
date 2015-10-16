@@ -5,14 +5,18 @@ Many programming languages handle errors with an exceptions mechanism. There are
 
 Even if the first option seems more powerful, from my experience an effect system is too heavy for the gains it brings compared the use of sum types with combinators. Sum types are just *simple* and *ubiquitous*. This is in fact the way errors are handled in [Rust](http://blog.burntsushi.net/rust-error-handling/).
 
-They are two basic sum types:
+There are two basic sum types:
 
 * `option A`: either `Some value` or `None` for an error
 * `A + E`: either `inl value` or `inr err` for an error
 
-Since there are no error combinators in the standard library, I wrote the [coq:error-handlers](https://github.com/clarus/coq-error-handlers) library. It provides the basic combinators `bind`, `map` and `default`.
+## The ErrorHandlers package
+Since there are no error combinators in the standard library, I wrote the [ErrorHandlers](https://github.com/clarus/coq-error-handlers) package:
 
-The `bind` sequences two computations with errors:
+    opam repo add coq-released https://coq.inria.fr/opam/released
+    opam install -j4 coq:error-handlers
+
+It provides the basic combinators `bind`, `map` and `default`. The `bind` sequences two computations with errors:
 
     Require Import Coq.Lists.List.
     Require Import ErrorHandlers.All.

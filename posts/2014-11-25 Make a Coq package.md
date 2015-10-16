@@ -63,11 +63,11 @@ We first publish a development version. We will do a pull-request to add our new
 
 A package is described by three files:
 
-* `descr`:
+* `descr`
 
         An arithmetic library.
 
-* `opam`:
+* `opam`
 
         opam-version: "1.1"
         maintainer: "me@myself.ninja"
@@ -81,10 +81,12 @@ A package is described by three files:
         ]
         remove: ["rm" "-R" "%{lib}%/coq/user-contrib/ThatSuperProof"]
         depends: [
-          "coq" {>= "8.4.5" & < "8.5"}
+          "coq" {>= "8.4.5" & < "8.5~"}
         ]
 
-* `url`:
+  The `< "8.5~"` is there to say that the Coq version must be lesser than `8.5.0`, `8.5.1`, ... as well as `8.5~beta1`, `8.5~beta2`, ...
+
+* `url`
 
         git: "https://github.com/myself/that-super-proof"
 
