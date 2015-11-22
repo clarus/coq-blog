@@ -58,8 +58,14 @@ To compile your project, run:
 
 `coq_makefile` is clever and also generates an `install` rule, among over things.
 
-## Publish a development version
-We first publish a development version. We will do a pull-request to add our new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/) if you need help). Fork the [OPAM Coq repository](https://github.com/coq/opam-coq-archive) and add a folder `coq:that-super-proof/coq:that-super-proof.dev` in `extra-dev/packages/`. All package names must be in small caps and in the `coq:` namespace. You can also use your own `coq:name:` namespace for bigger projects.
+## Publish
+To publish a new version you need to make a release. In the GitHub page of your project, go to the *releases* section and add a new release named `1.0.0`. People tend to use the [SemVer](http://semver.org/) convention for the version names, as `MAJOR.MINOR.PATCH`:
+
+* `MAJOR`: major changes
+* `MINOR`: minor changes
+* `PATCH`: bug fixes
+
+We do a pull-request to add our new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/) if you need help). Fork the [OPAM Coq repository](https://github.com/coq/opam-coq-archive) and add a folder `coq:that-super-proof/coq:that-super-proof.dev` in `released/packages/`. All package names must be in small caps and start by `coq:` namespace.
 
 A package is described by three files:
 
@@ -88,27 +94,14 @@ A package is described by three files:
 
 * `url`
 
-        git: "https://github.com/myself/that-super-proof"
-
-You can test your own fork of the OPAM Coq repository using `opam repo add` on the folder `extra-dev` of your fork. Then, issue a pull-request with your new package.
-
-## Publish a stable version
-To publish a stable version you need to make a release. In the GitHub page of your project, go to the *releases* section and add a new release named `1.0.0`. People tend to use the [SemVer](http://semver.org/) convention for the version names, as `MAJOR.MINOR.PATCH`:
-
-* `MAJOR`: major changes
-* `MINOR`: minor changes
-* `PATCH`: bug fixes
-
-Add a folder `coq:that-super-proof/coq:that-super-proof.1.0.0` in the folder `released/packages/` of the [OPAM Coq repository](https://github.com/coq/opam-coq-archive). Add the `descr` and `opam` files as before and a new `url` file:
-
-    http: "https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz"
-    checksum: "da1da74c8f6c560b153ab8dc558cf29e"
+        http: "https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz"
+        checksum: "da1da74c8f6c560b153ab8dc558cf29e"
 
 The MD5 checksum is mandatory, and can be obtained with:
 
     curl -L https://github.com/myself/that-super-proof/archive/1.0.0.tar.gz |md5sum
 
-Make a pull-request with your package so that it can be accepted.
+You can test your own fork of the OPAM Coq repository using `opam repo add` on the folder `released` of your fork. Then, issue a pull-request with your new package.
 
 ## Use the bench
 There is a bench system available on [coq-bench.github.io](http://coq-bench.github.io/). We test all the packages for each version of Coq. We host this service to help you to check that your packages compile for each platform, even development ones. Compatibility across Coq versions is not necessary but allows you to reach more users. You can specify the Coq versions you depend upon in the `depends` field of your `opam` files.
