@@ -31,8 +31,6 @@ To add the development versions of Coq:
 
     opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
 
-**Remark:** There is also a distribution mechanism with [Coq Shell](https://github.com/coq/opam-coq-shell).
-
 ## Install a package
 The Coq packages are in the namespace `coq:`. To list all of them:
 
