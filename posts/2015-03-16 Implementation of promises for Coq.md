@@ -16,7 +16,7 @@ For example, in [coq-io-system](https://github.com/coq-io/system) (which defines
           Lwt.ret @@ Sum.to_coq s)).
     Defined.
 
-This code is written in proof mode, so that we do not care about the `match`/`with` parameters and compile with both Coq 8.4 and 8.5 patterns. The functions `join` and `first` are implemented in [coq-io-system:ocaml/ioSystem.ml](https://github.com/coq-io/system-ocaml/blob/master/ioSystem.ml) using Lwt primitives. The Lwt primitives needed some wrappers because their types are:
+This code is written in proof mode, so that we do not care about the `match`/`with` parameters and compile with both Coq 8.4 and 8.5 patterns. The functions `join` and `first` are implemented in [coq-io-system-ocaml/ioSystem.ml](https://github.com/coq-io/system-ocaml/blob/master/ioSystem.ml) using Lwt primitives. The Lwt primitives needed some wrappers because their types are:
 
     Lwt.join : unit Lwt.t list -> unit Lwt.t
     Lwt.pick : 'a Lwt.t list -> 'a list Lwt.t
