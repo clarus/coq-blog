@@ -21,7 +21,7 @@ We map the `pred` function on the values `0`, `1`, `2`, `5` and check the result
 For functions with several parameters, the trick of the `List.map` function does not work well because of the [currying](https://en.wikipedia.org/wiki/Currying). What need instead is a map over lists of tuples. I made the package [CUnit](https://github.com/clarus/coq-cunit) to provide such a map. Install it with [OPAM](use-opam-for-coq.html):
 
     opam repo add coq-released https://coq.inria.fr/opam/released
-    opam install coq:cunit
+    opam install coq-cunit
 
 Now we can test the `plus` function:
 

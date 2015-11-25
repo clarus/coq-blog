@@ -14,7 +14,7 @@ There are two basic sum types:
 Since there are no error combinators in the standard library, I wrote the [ErrorHandlers](https://github.com/clarus/coq-error-handlers) package:
 
     opam repo add coq-released https://coq.inria.fr/opam/released
-    opam install -j4 coq:error-handlers
+    opam install -j4 coq-error-handlers
 
 It provides the basic combinators `bind`, `map` and `default`. The `bind` sequences two computations with errors:
 

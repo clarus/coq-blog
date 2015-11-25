@@ -3,10 +3,10 @@ We will explain how to write scripts in [Coq](https://coq.inria.fr/) using the l
 *There is now a newer OPAM website generator [opam-website](https://github.com/coq-io/opam-website). See the results on [coq.io/opam](http://coq.io/opam/).*
 
 ## Get started
-Install the [coq:io:system](https://github.com/coq-io/system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
+Install the [coq-io-system](https://github.com/coq-io/system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
 
     opam repo add coq-released https://coq.inria.fr/opam/released
-    opam install coq:io:system
+    opam install coq-io-system
 
 Create an empty Coq project by adding the following files in a fresh directory:
 
@@ -62,22 +62,22 @@ Compile and run the generated OCaml:
 This should print you the message `test` on the terminal!
 
 ## Parse the OPAM repository
-To write our script we need to understand the basis of how OPAM for Coq repositories are organized (for example in [opam-coq-archive](https://github.com/coq/opam-coq-archive)). All the packages are in the `packages` folders. There is one folder per package name, all prefixed by `coq:` because we are in the Coq namespace. In each package folder, there is one folder per version of the package with three files `descr`, `opam` and `url` to describe the package.
+To write our script we need to understand the basis of how OPAM for Coq repositories are organized (for example in [opam-coq-archive](https://github.com/coq/opam-coq-archive)). All the packages are in the `packages` folders. There is one folder per package name, all prefixed by `coq-` because we are in the Coq namespace. In each package folder, there is one folder per version of the package with three files `descr`, `opam` and `url` to describe the package.
 
     packages/
-      coq:list-string/
-        coq:list-string.1.0.0/
+      coq-list-string/
+        coq-list-string.1.0.0/
           descr
           opam
           url
-        coq:list-string.2.0.0/
+        coq-list-string.2.0.0/
           ...
       ...
 
 We define the data type of an OPAM repository in [src/Model.v](https://github.com/clarus/repos2web/blob/master/src/Model.v). In a first pass, we will generate an element of type `Packages.t`. This is a list of packages described by a name and a list of versions. In a second pass, we will generate an element of type `FullPackages.t`, by adding the description of each version and by computing each latest version using the (complex) [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version).
 
 ### First pass
-The first pass is described in [src/Main.v](https://github.com/clarus/repos2web/blob/master/src/Main.v) in the `Basic` module. The function `list_coq_files` lists the files/folders which are starting with the `coq:` prefix in a given `folder`:
+The first pass is described in [src/Main.v](https://github.com/clarus/repos2web/blob/master/src/Main.v) in the `Basic` module. The function `list_coq_files` lists the files/folders which are starting with the `coq-` prefix in a given `folder`:
 
     Definition list_coq_files (folder : LString.t) : C (option (list Name.t)) :=
       let! folders := System.list_files folder in

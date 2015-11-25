@@ -12,7 +12,7 @@ The simplest way to install [Pluto](https://github.com/coq-concurrency/pluto) is
 
 Install Pluto:
 
-    opam install --jobs=4 coq:concurrency:pluto
+    opam install --jobs=4 coq-concurrency-pluto
 
 Run it on some `html/` folder:
 

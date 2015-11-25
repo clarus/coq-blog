@@ -39,7 +39,7 @@ we write the following scenario:
 
 This scenario is parametrized by any `repository` folder names and any lists of OPAM `packages`. It runs the function `get_packages` on `repository` in a "valid" environment and ensures that the result is `Some packages`, meaning that the repository was successfully parsed.
 
-The `get_package` function starts by a `let!` to call `list_coq_files`. We first reuse the scenario `list_coq_files_ok`. This describes a use case in which a list of folders starting by `coq:` is correctly listed:
+The `get_package` function starts by a `let!` to call `list_coq_files`. We first reuse the scenario `list_coq_files_ok`. This describes a use case in which a list of folders starting by `coq-` is correctly listed:
 
     apply (Let (list_coq_files_ok _ (Packages.to_folders packages))).
 

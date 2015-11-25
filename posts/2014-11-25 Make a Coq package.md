@@ -65,7 +65,7 @@ To publish a new version you need to make a release. In the GitHub page of your 
 * `MINOR`: minor changes
 * `PATCH`: bug fixes
 
-We do a pull-request to add our new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/) if you need help). Fork the [OPAM Coq repository](https://github.com/coq/opam-coq-archive) and add a folder `coq:that-super-proof/coq:that-super-proof.dev` in `released/packages/`. All package names must be in small caps and start by `coq:` namespace.
+We do a pull-request to add our new package (see [pull-requests on GitHub](https://help.github.com/articles/using-pull-requests/) if you need help). Fork the [OPAM Coq repository](https://github.com/coq/opam-coq-archive) and add a folder `coq-that-super-proof/coq-that-super-proof.dev` in `released/packages/`. Package names must start with the `coq-` prefix.
 
 A package is described by three files:
 

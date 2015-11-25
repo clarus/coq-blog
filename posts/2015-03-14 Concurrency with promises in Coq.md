@@ -12,7 +12,7 @@ To write an interactive application we quickly need a way to do non-blocking inp
 We chose to use promises, in the style of the [Lwt library](http://ocsigen.org/lwt/) for [lightweight threads](http://en.wikipedia.org/wiki/Light-weight_process) in [OCaml](https://ocaml.org/). The promises can be implemented efficiently using lightweight threads, while being simpler to use than an event loop or callbacks. The actor model is another interesting approach which we will study later.
 
 ### Sequential computations
-We recall the definition of our interactive sequential computations (see the [coq:io](https://github.com/coq-io/io) package):
+We recall the definition of our interactive sequential computations (see the [coq-io](https://github.com/coq-io/io) package):
 
     Module C.
       Inductive t (E : Effects.t) : Type -> Type :=
@@ -35,7 +35,7 @@ The effects are a type of `command` and a type of `answer`, dependent on the val
 * `Call command`, the call to a command
 * `Let x f`, the evaluation of `x`, followed by the evaluation of `f` applied to the result of `x`
 
-The `Let` operator is also called the *bind* in the terminology of [monads](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). The effects `E` typically represent external calls to the system. You can for example look at the [API](http://clarus.github.io/doc/io-system/Io.System.System.html) of the [coq:io:system](https://github.com/coq-io/system) library, which provides basic calls to manipulates files and the terminal.
+The `Let` operator is also called the *bind* in the terminology of [monads](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). The effects `E` typically represent external calls to the system. You can for example look at the [API](http://clarus.github.io/doc/io-system/Io.System.System.html) of the [coq-io-system](https://github.com/coq-io/system) library, which provides basic calls to manipulates files and the terminal.
 
 ### Join
 We add the `Join` operator to the computations:

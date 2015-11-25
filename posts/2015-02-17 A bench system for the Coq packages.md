@@ -64,30 +64,30 @@ This is a more complex strategy. We install as many packages as possible until a
 
 This strategy is more clever but also more fragile. We use the branch mechanism of Git on the `.opam` folder to switch efficiently between OPAM states. At the end of the process, we obtain a tree of all the Git branches used to explore the packages space. For example, for the stable repository:
 
-    * b99f693 coq:concurrency:pluto.1.0.0
-    * a1ff2f1 coq:concurrency:system.1.0.0
-    * 27c7b93 coq:moment.1.0.0
-    * d950f53 coq:list-string.2.0.0
-    | * 4817264 coq:flocq.2.2.0
-    | | * 3d4105d coq:flocq.2.3.0
+    * b99f693 coq-concurrency-pluto.1.0.0
+    * a1ff2f1 coq-concurrency-system.1.0.0
+    * 27c7b93 coq-moment.1.0.0
+    * d950f53 coq-list-string.2.0.0
+    | * 4817264 coq-flocq.2.2.0
+    | | * 3d4105d coq-flocq.2.3.0
     | |/  
-    | | * 544de40 coq:concurrency:proxy.1.0.0
-    | | * 9a1989e coq:coqeal:refinements.0.9.1
-    | | * 0bfd44f coq:fpmods.0.2.0
-    | | * bda2af7 coq:coqeal:theory.0.9.1
-    | | * 27aa320 coq:plouffe.1.0.0
-    | | * 35961d5 coq:coquelicot.2.0.1
-    | | * 89db498 coq:error-handlers.1.0.0
-    | | * aa85f8c coq:flocq.2.4.0
+    | | * 544de40 coq-concurrency-proxy.1.0.0
+    | | * 9a1989e coq-coqeal:refinements.0.9.1
+    | | * 0bfd44f coq-fpmods.0.2.0
+    | | * bda2af7 coq-coqeal:theory.0.9.1
+    | | * 27aa320 coq-plouffe.1.0.0
+    | | * 35961d5 coq-coquelicot.2.0.1
+    | | * 89db498 coq-error-handlers.1.0.0
+    | | * aa85f8c coq-flocq.2.4.0
     | |/  
-    | * 48f33a4 coq:iterable.1.0.0
-    | * 0a48735 coq:function-ninjas.1.0.0
-    | * e2980d1 coq:list-plus.1.0.0
-    | * 4122f1a coq:list-string.1.0.0
+    | * 48f33a4 coq-iterable.1.0.0
+    | * 0a48735 coq-function-ninjas.1.0.0
+    | * e2980d1 coq-list-plus.1.0.0
+    | * 4122f1a coq-list-string.1.0.0
     |/  
-    * 89705ad coq:math-classes.1.0.2
-    * 5d3ec5d coq:math-comp.1.5.0
-    * 470eefb coq:ssreflect.1.5.0
+    * 89705ad coq-math-classes.1.0.2
+    * 5d3ec5d coq-math-comp.1.5.0
+    * 470eefb coq-ssreflect.1.5.0
     * b0205c8 Initial files.
 
 ## Related work

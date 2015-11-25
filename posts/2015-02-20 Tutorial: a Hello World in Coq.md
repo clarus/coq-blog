@@ -3,10 +3,10 @@ We will present the classic [Hello World](http://en.wikipedia.org/wiki/%22Hello,
 The *Hello World* program exists in almost every languages, including [in White Space](http://en.wikipedia.org/wiki/List_of_Hello_world_program_examples#W). In Coq this is more complicated because the language is purely functional. This means that no effects can be done, in particular no inputs-outputs. This constraint is there to preserve the logical consistency of the system. However, we can still encode inputs-outputs by defining a [monad](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). This technique was popularized by the [Haskell](http://en.wikipedia.org/wiki/Haskell_%28programming_language%29) programming language.
 
 ## Hello World
-Using [OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html), install the package [coq:io:system](https://github.com/coq-io/system):
+Using [OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html), install the package [coq-io-system](https://github.com/coq-io/system):
 
     opam repo add coq-released https://coq.inria.fr/opam/released
-    opam install coq:io:system
+    opam install coq-io-system
 
 You can now write the *Hello World*:
 
@@ -44,7 +44,7 @@ The specification of this program is very straightforward: *the program only pri
       apply (Run.log_ok (LString.s "Hello world!")).
     Defined.
 
-The specification `hello_world_ok` is of type `Run.t (hello_world argv) tt`: this runs the program `hello_world` on an argument `argv` and returns the result `tt`. We just apply the function `Run.log_ok` of the [coq:io:system](https://github.com/coq-io/system) library which exactly describes an environment reacting to a single printing event.
+The specification `hello_world_ok` is of type `Run.t (hello_world argv) tt`: this runs the program `hello_world` on an argument `argv` and returns the result `tt`. We just apply the function `Run.log_ok` of the [coq-io-system](https://github.com/coq-io/system) library which exactly describes an environment reacting to a single printing event.
 
 This specification needs *no* proofs because it is valid *by construction*. We do not need any SMT solver, model checker or manual proof. The specification is valid because it is well-typed. Of course this example is very simple, so we will see a slightly more complex one.
 

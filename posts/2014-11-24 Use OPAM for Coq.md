@@ -32,17 +32,17 @@ To add the development versions of Coq:
     opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
 
 ## Install a package
-The Coq packages are in the namespace `coq:`. To list all of them:
+The Coq packages are in the namespace `coq-`. To list all of them:
 
-    opam search coq:
+    opam search coq-
 
 To install a package:
 
-    opam install coq:io:hello-world
+    opam install coq-io-hello-world
 
 To specify the version you want to install:
 
-    opam install coq:io:hello-world.1.1.0
+    opam install coq-io-hello-world.1.1.0
 
 If the package is slow to install (for instance, Coq itself), use the `-j` option to speed it up and `-v` to see the progress:
 
