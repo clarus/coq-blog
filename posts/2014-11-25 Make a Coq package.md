@@ -75,14 +75,18 @@ A package is described by three files:
 
 * `opam`
 
-        opam-version: "1.1"
+        opam-version: "1.2"
         maintainer: "me@myself.ninja"
         homepage: "https://github.com/myself/that-super-proof"
+        dev-repo: "https://github.com/myself/that-super-proof.git"
         bug-reports: "https://github.com/myself/that-super-proof/issues"
+        authors: ["Me Myself"]
         license: "MIT"
         build: [
           ["./configure.sh"]
           [make "-j%{jobs}%"]
+        ]
+        install: [
           [make "install"]
         ]
         remove: ["rm" "-R" "%{lib}%/coq/user-contrib/ThatSuperProof"]
