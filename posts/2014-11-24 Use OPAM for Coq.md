@@ -3,11 +3,9 @@
 ## Install OPAM
 Install OPAM by your preferred method. It is recommended to use the latest version (`1.2.2` as of May 7, 2015), which can be installed from the sources:
 
-    curl -L https://github.com/ocaml/opam/archive/1.2.2.tar.gz |tar -xz
-    cd opam-1.2.2
-    ./configure
-    make lib-ext
-    make
+    curl -L https://github.com/ocaml/opam/releases/download/1.2.2/opam-full-1.2.2.tar.gz |tar -xz
+    cd opam-full-1.2.2
+    ./configure && make lib-ext && make
     sudo make install
 
 By default the OPAM packages are installed in `~/.opam`. You can also have many installation folders if you want many versions of Coq or packages. A practice I recommend is to have one installation folder per project or configuration. To configure OPAM in a fresh folder `opam`:
