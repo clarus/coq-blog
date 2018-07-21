@@ -10,4 +10,5 @@ clean:
 	rm -Rf blog/
 
 serve:
+	@echo Starting on http://localhost:8000/
 	ruby -run -e httpd blog/ -p 8000
