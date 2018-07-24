@@ -1,4 +1,4 @@
-The [GADTs (Generalized algebraic data types)](https://en.wikipedia.org/wiki/Generalized_algebraic_data_type#Higher-order_abstract_syntax) are a generalization of sum types where the type parameter can change in each case. GADTs are not available in [Flow](https://flow.org/) but we show a technique to approximate them.
+The [GADTs (Generalized algebraic data types)](https://en.wikipedia.org/wiki/Generalized_algebraic_data_type#Higher-order_abstract_syntax) are a generalization of sum types where the type parameter can change in each case. GADTs are not available in [Flow](https://flow.org/) but we show a technique to approximate them. We take inspiration from [Approximating GADTs in PureScript](http://code.slipthrough.net/2016/08/10/approximating-gadts-in-purescript/).
 
 ## Use case
 Let us say we want to implement an evaluator for simple arithmetic expressions. We define the type of expressions:
@@ -50,7 +50,7 @@ but we get a Flow error:
     23: function evaluate(expr: Expr): boolean | number {
                                        ^ [1]
 
-This is because the type `Expr` does not prevent to write invalid expressions such as multiplications over booleans:
+This error occurs because Flow does not know if we multiply booleans or numbers since the return type of `evaluate` is `boolean | number`. Flow is right to warn us because the type `Expr` does not prevent to write expressions multiplying booleans:
 
     const foo: Expr = {
       type: 'Mul',
@@ -58,11 +58,12 @@ This is because the type `Expr` does not prevent to write invalid expressions su
       y: {type: 'B', value: false}
     };
 
-We would like to distinguish between expressions which evaluate to a `boolean` and expressions which evaluate to a `number`.
+To force the multiplication to be over numeric expressions, we would like to distinguish expressions which evaluate to a `number` from expressions which evaluate to a `boolean`.
 
-## GADTs
-GADTs allow exactly that. In [Haskell](https://www.haskell.org/) we can define a type `Expr a` (with `a` the type of the evaluation result) as follows:
+## GADTs to the rescue
+GADTs allow to parametrize the expression type `Expr` by the return type of the evaluation (either `boolean` or `number`). In a language with GADTs like [Haskell](https://www.haskell.org/) we can define a type `Expr a` (with `a` the type of the evaluation result) as follows:
 
+    -- In Haskell:
     data Expr a where
       B :: Bool -> Expr Bool
       I :: Int -> Expr Int
@@ -94,7 +95,7 @@ We use a trick to encode GATDs in Flow. We express that in the case `type: 'I'` 
     } | {
       ...
 
-We force ourselves to only provide the identity function for `_eq` to make the equality witness valid:
+To make the equality witness `_eq` valid, we must define it with the identity function:
 
     function i(value: number): Expr<number> {
       return {type: 'I', _eq: x => x, value};
@@ -214,4 +215,4 @@ If we do not use `_eq`:
 A weakness of this encoding is that we must enforce by hand that `_eq` is always `x => x`.
 
 ## Related
-The idea of using type equalities is taken from [Approximating GADTs in PureScript](http://code.slipthrough.net/2016/08/10/approximating-gadts-in-purescript/). In [PureScript](http://www.purescript.org/) the type system almost enforces that `_eq` is the identity (it could also be a non-terminating function). There is a [thread](https://github.com/facebook/flow/issues/1356) on GitHub issues discussing the addition of GADTs to Flow (currently closed).
+The idea of using type equalities is taken from [Approximating GADTs in PureScript](http://code.slipthrough.net/2016/08/10/approximating-gadts-in-purescript/). In [PureScript](http://www.purescript.org/) the type system almost enforces that `_eq` is the identity (it could also be a non-terminating function). There is a [thread](https://github.com/facebook/flow/issues/1356) on GitHub issues discussing the addition of GADTs to Flow.
