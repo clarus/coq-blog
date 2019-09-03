@@ -4,7 +4,8 @@ This configuration is directly inspired by the [CI setup](https://github.com/coq
 
 ![Travis CI report on a pull-request](static/images/travis-ci/build-report.png "Travis CI report on a pull-request")
 
-We take the example of the [github.com/coq-io/system](https://github.com/coq-io/system) project. We need to create two files at the root of the project:
+## Setting up Travis CI
+To setup Travis CI, we take the example of the [github.com/coq-io/system](https://github.com/coq-io/system) project. We need to create two files at the root of the project:
 
 * `coq-io-system.opam` to describe the dependencies;
 * `.travis.yml` to configure and activate Travis CI.
