@@ -26,7 +26,7 @@ by:
 
 in each package definition with parallel build issues.
 
-These errors occurred in most of the packages using [coq_makefile](https://coq.inria.fr/refman/practical-tools/utilities.html#building-a-coq-project-with-coq-makefile) and mixing Coq and OCaml code. The versions `4.02` and `4.05` of OCaml were impacted, but the version `4.07` seemed free of bugs. The most frequent error message was `Corrupted compiled interface`. Apparently this happens when both `byte` and `opt` compilations run in parallel, modifying `.cmi` files at the same time. The [Dune](https://dune.build/) build system may be a more robust alternative to `coq_makefile`, but I have not data about it.
+These errors occurred in most of the packages using [coq_makefile](https://coq.inria.fr/refman/practical-tools/utilities.html#building-a-coq-project-with-coq-makefile) and mixing Coq and OCaml code. The versions `4.02` and `4.05` of OCaml were impacted, but the version `4.07` seems free of bugs. The most frequent error message is `Corrupted compiled interface`. Apparently this happens when both `byte` and `opt` compilations run in parallel, modifying `.cmi` files at the same time. The [Dune](https://dune.build/) build system may be a more robust alternative to `coq_makefile`, but I have no data about it.
 
 ## Result
 Most of the Coq packages with flaky makefiles are now corrected, and the respective maintainers contacted. We will continue to fix these bugs as they occur.
