@@ -1,5 +1,7 @@
 The [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) compiler transforms [OCaml](https://ocaml.org/) programs to [Coq](https://coq.inria.fr/) ones. There usually are many errors in each file to import (the Coq language tends to be stricter than OCaml and we do not want to import code with too much encoding). Fixing errors may be the most time consuming part of an import. We present a system to display all the errors at once instead of one by one. We believe that it helps to get a quick idea of how difficult a file is to translate, while having a sense of progress when fixing the errors.
 
+*This work was financed by [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to verify the OCaml implementation of the [Tezos](https://tezos.com/) blockchain. We now output (dummy) Coq even in case of errors so that the `All` primitive is not needed anymore. Still we believe what is described may be useful for other compilers.*
+
 ![Multiple errors report](static/images/coq-of-ocaml-multiple-errors/report.png "Multiple errors report")
 
 ## Example
