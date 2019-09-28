@@ -1,4 +1,4 @@
-Testing that a Coq project works with different Coq versions may be time consuming. This is necessary to deliver with confidence new project releases. We show a setup to run automated testing with [Travis CI](https://travis-ci.org/) in [GitHub](https://github.com/) using pre-compiled Coq instances. Thanks to that setup we can check new pull-requests in a few minutes for small projects.
+Testing that a Coq project works with different Coq versions may be time consuming. This is necessary to deliver with confidence new project releases. We show a setup to run automated testing with [Travis CI](https://travis-ci.com/) in [GitHub](https://github.com/) using pre-compiled Coq instances. Thanks to that setup we can check new pull-requests in a few minutes for small projects.
 
 This configuration is directly inspired by the [CI setup](https://github.com/coq-community/docker-coq/wiki/CI-setup) documentation written by [Erik Martin-Dorel](https://github.com/erikmd).
 
@@ -12,6 +12,8 @@ To setup Travis CI, we take the example of the [github.com/coq-io/system](https:
 
 ## Describing the dependencies
 We create a file `coq-io-system.opam` with the following content:
+
+    version: "dev"
 
     opam-version: "2.0"
     maintainer: "dev@clarus.me"
@@ -49,13 +51,12 @@ This file describes the dependencies of the project. It can list any other opam 
     # adding the Coq repository if not already done
     opam repo add coq-released https://coq.inria.fr/opam/released
     # installing the package
-    opam pin add coq-io-system.opam . --kind=path
+    opam pin add coq-io-system . --kind=path -y
 
 ## Configuring Travis CI
 We add a file `.travis.yml` with the following content:
 
-    dist: trusty
-    sudo: required
+    dist: bionic
     language: generic
 
     services:
@@ -82,12 +83,10 @@ We add a file `.travis.yml` with the following content:
         export PS4='+ \e[33;1m(\$0 @ line \$LINENO) \$\e[0m '
         set -ex  # -e = exit on failure; -x = trace for debug
         opam update
-        opam pin add ${PACKAGE_NAME}.opam . --kind=path --no-action
-        opam config list
-        opam repo list
-        opam pin list
-        opam list
+        opam pin add ${PACKAGE_NAME} . --kind=path --no-action -y
+        opam config list; opam repo list; opam pin list; opam list
         " install
+
     script:
     - echo -e "${ANSI_YELLOW}Building...${ANSI_RESET}" && echo -en 'travis_fold:start:script\\r'
     - |
@@ -96,18 +95,20 @@ We add a file `.travis.yml` with the following content:
         set -ex
         sudo chown -R coq:coq /home/project
         # Check if the package is compatible with the current environment
-        if [ ${SHOULD_SUPPORT} ] || opam install ${PACKAGE_NAME} --show-action; then
+        if [ "${SHOULD_SUPPORT}" = "true" ] || opam install ${PACKAGE_NAME} --show-action -y; then
           # First install the dependencies
           opam install ${PACKAGE_NAME} --deps-only -y
           opam list
           # Then install the package itself in verbose mode
-          opam install ${PACKAGE_NAME} -v
+          opam install ${PACKAGE_NAME} -v -y
         fi;
         " script
-    - docker stop COQ  # optional
     - echo -en 'travis_fold:end:script\\r'
 
-This YAML file explains to [Travis CI](https://travis-ci.org/) what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
+    after_script:
+    - docker stop COQ  # optional
+
+This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
 
 * check if either:
   * the platform is supposed to be supported `if [ ${SHOULD_SUPPORT} ]`,
@@ -116,10 +117,6 @@ This YAML file explains to [Travis CI](https://travis-ci.org/) what to do to che
 * install the project in verbose mode `opam install ${PACKAGE_NAME} -v`.
 
 ## Using Travis CI
-You may need to activate Travis CI for your project in the [settings page](https://travis-ci.org/account/repositories):
-
-![Enabling Travis CI](static/images/travis-ci/enabling.png "Enabling Travis CI")
-
-Then for each pull-request you will see a green or red mark precising if the project passed the tests, along with detailed logs:
+You may need to activate Travis CI for your project in the [settings page](https://travis-ci.com/account/repositories). Then for each pull-request you will see a green or red mark precising if the project passed the tests, along with detailed logs:
 
 ![Validated pull-request](static/images/travis-ci/pull-request.png "Commits in a pull-request")
