@@ -1,7 +1,7 @@
 # Coq Blog
 A blog about Coq. Hosted on [coq-blog.clarus.me](http://coq-blog.clarus.me/).
 
-## Use
+## Use or fork to make your own blog
 Install the Markdown parser (you first need Ruby):
 
     gem install redcarpet
@@ -25,4 +25,4 @@ Preview the results on [localhost:8000](http://localhost:8000/):
     make serve
 
 ## License
-Published under MIT License. This holds both for the posts and the blog engine. Fell free to clone it.
+Published under MIT License. This holds both for the posts and the blog engine.
