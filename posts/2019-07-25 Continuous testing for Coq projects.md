@@ -111,10 +111,10 @@ We add a file `.travis.yml` with the following content:
 This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
 
 * check if either:
-  * the platform is supposed to be supported `if [ ${SHOULD_SUPPORT} ]`,
-  * or if opam considers the platform as compatible `opam install ${PACKAGE_NAME} --show-action`;
+  * the platform is supposed to be supported `if [ "${SHOULD_SUPPORT}" = "true" ]`,
+  * or if opam considers the platform as compatible `opam install ${PACKAGE_NAME} --show-action -y`;
 * install the dependencies `opam install ${PACKAGE_NAME} --deps-only -y`;
-* install the project in verbose mode `opam install ${PACKAGE_NAME} -v`.
+* install the project in verbose mode `opam install ${PACKAGE_NAME} -v -y`.
 
 ## Using Travis CI
 You may need to activate Travis CI for your project in the [settings page](https://travis-ci.com/account/repositories). Then for each pull-request you will see a green or red mark precising if the project passed the tests, along with detailed logs:
