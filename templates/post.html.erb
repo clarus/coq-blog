@@ -3,6 +3,11 @@
 <div class="row">
   <div class="col-md-1"></div>
   <div class="col-md-10">
+    <% if post.wip? %>
+      <div class="alert alert-danger" role="alert">
+        This article is a Work In Progress. The url is temporary. Thanks if you have remarks!
+      </div>
+    <% end %>
     <h1 class="post_title"><%= h post.name %></h1>
     <p><em><%= post.date_string %></em></p>
     <%= post.html %>
