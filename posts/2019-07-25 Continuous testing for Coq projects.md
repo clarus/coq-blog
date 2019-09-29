@@ -4,13 +4,13 @@ This configuration is directly inspired by the [CI setup](https://github.com/coq
 
 ![Travis CI report on a pull-request](static/images/travis-ci/build-report.png "Travis CI report on a pull-request")
 
-## Setting up Travis CI
+### Setting up Travis CI
 To setup Travis CI, we take the example of the [github.com/coq-io/system](https://github.com/coq-io/system) project. We need to create two files at the root of the project:
 
 * `coq-io-system.opam` to describe the dependencies;
 * `.travis.yml` to configure and activate Travis CI.
 
-## Describing the dependencies
+### Describing the dependencies
 We create a file `coq-io-system.opam` with the following content:
 
     version: "dev"
@@ -53,7 +53,7 @@ This file describes the dependencies of the project. It can list any other opam 
     # installing the package
     opam pin add coq-io-system . --kind=path -y
 
-## Configuring Travis CI
+### Configuring Travis CI
 We add a file `.travis.yml` with the following content:
 
     dist: bionic
@@ -116,7 +116,7 @@ This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to che
 * install the dependencies `opam install ${PACKAGE_NAME} --deps-only -y`;
 * install the project in verbose mode `opam install ${PACKAGE_NAME} -v -y`.
 
-## Using Travis CI
+### Using Travis CI
 You may need to activate Travis CI for your project in the [settings page](https://travis-ci.com/account/repositories). Then for each pull-request you will see a green or red mark precising if the project passed the tests, along with detailed logs:
 
 ![Validated pull-request](static/images/travis-ci/pull-request.png "Commits in a pull-request")

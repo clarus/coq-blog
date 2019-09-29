@@ -4,7 +4,7 @@ The pace of Coq releases is surprisingly slow for a project with that many users
 
 More important, a lot of people prefer to use the development version of Coq because of the slow release cycle. So your code should at least support the latest stable release and the current development version.
 
-## Check your code
+### Check your code
 [OPAM](http://opam.ocamlpro.com/) is the best way to test your code with different versions of Coq. You can read this [introduction](http://coq-blog.clarus.me/use-opam-for-coq.html) to learn more about how to use OPAM for Coq.
 
 Let us say we want to test our project `foo` with the Coq versions `8.4.5` and `dev`. We create two installs of Coq in `foo/opam.8.4.5` and `foo/opam.dev`. For the stable version:
@@ -27,12 +27,12 @@ You have now a different version of Coq in each terminal, and can test your code
 
 We also provide a [coq-bench](http://coq-bench.github.io/) website, where OPAM packages are tested for different versions of Coq. This is another simple way to check your code compatibility if you have a package.
 
-## Be clean and robust
+### Be clean and robust
 This is obvious but this must be emphasized: be clean and robust. Most Coq features outside the kernel can be considered as experimental, or do not have a clear semantics. This includes in particular the tactic language [LTac](https://coq.inria.fr/distrib/V8.4pl5/refman/Reference-Manual012.html).
 
 So try not to rely too much on advanced features, and make your proofs scripts robust (using [explicitly named variables](http://poleiro.info/posts/2013-11-17-automatic-naming-considered-harmful.html) or [bullets](http://poleiro.info/posts/2013-06-27-structuring-proofs-with-bullets.html) for example).
 
-## Preprocess
+### Preprocess
 You can use preprocessing to solve breaking incompatibility changes. This helps to keep one code database, instead of splitting your developments with one branch per Coq version.
 
 Some people use the [CPP preprocessor](http://en.wikipedia.org/wiki/C_preprocessor), but it has a heavy syntax and is quite limited. Instead, I recommend to go for simpler and more powerful tools like [ERB](http://en.wikipedia.org/wiki/ERuby). Here is an example file `Test.v`:

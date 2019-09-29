@@ -1,6 +1,6 @@
 The [GADTs (Generalized algebraic data types)](https://en.wikipedia.org/wiki/Generalized_algebraic_data_type#Higher-order_abstract_syntax) are a generalization of sum types where the type parameter can change in each case. GADTs are not available in [Flow](https://flow.org/) but we show a technique to approximate them. We take inspiration from [Approximating GADTs in PureScript](http://code.slipthrough.net/2016/08/10/approximating-gadts-in-purescript/).
 
-## Use case
+### Use case
 Let us say we want to implement an evaluator for simple arithmetic expressions. We define the type of expressions:
 
     type Expr = {
@@ -60,7 +60,7 @@ This error occurs because Flow does not know if we multiply booleans or numbers 
 
 To force the multiplication to be over numeric expressions, we would like to distinguish expressions which evaluate to a `number` from expressions which evaluate to a `boolean`.
 
-## GADTs to the rescue
+### GADTs to the rescue
 GADTs allow to parametrize the expression type `Expr` by the return type of the evaluation (either `boolean` or `number`). In a language with GADTs like [Haskell](https://www.haskell.org/) we can define a type `Expr a` (with `a` the type of the evaluation result) as follows:
 
     -- In Haskell:
@@ -85,7 +85,7 @@ Unfortunately, Flow has no syntax to express this kind of types:
     } | {
       ...
 
-## Encoding in Flow
+### Encoding in Flow
 We use a trick to encode GATDs in Flow. We express that in the case `type: 'I'` of an expression of type `Expr<A>` the type `A` is actually a `number` by adding an _equality witness_ `_eq` between `A` and `number`:
 
     type Expr<A> = {
@@ -176,7 +176,7 @@ We can then define a well-typed `evaluate` function by applying the `_eq` witnes
 
 Note that `_eq` has no runtime value, is only here for typing and could be eliminated given a clever enough compiler / interpreter.
 
-## Robustness
+### Robustness
 We test the effectiveness of this encoding by introducing some errors in our code. In the definition of expressions:
 
 * mistake:
@@ -214,5 +214,5 @@ If we do not use `_eq`:
 
 A weakness of this encoding is that we must enforce by hand that `_eq` is always `x => x`.
 
-## Related
+### Related
 The idea of using type equalities is taken from [Approximating GADTs in PureScript](http://code.slipthrough.net/2016/08/10/approximating-gadts-in-purescript/). In [PureScript](http://www.purescript.org/) the type system almost enforces that `_eq` is the identity (it could also be a non-terminating function). There is a [thread](https://github.com/facebook/flow/issues/1356) on GitHub issues discussing the addition of GADTs to Flow.

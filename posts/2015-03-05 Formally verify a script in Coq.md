@@ -2,7 +2,7 @@ Last time, in [Write a script in Coq](http://coq-blog.clarus.me/write-a-script-i
 
 *There is now a newer OPAM website generator [opam-website](https://github.com/coq-io/opam-website). See the results on [coq.io/opam](http://coq.io/opam/).*
 
-## Unit testing, revisited
+### Unit testing, revisited
 A common practice to check programs is to write [unit tests](http://en.wikipedia.org/wiki/Unit_testing). For each function, a test is written to execute it on some particular inputs, and to check that the results are what we expect. On more complex programs, we also need to simulate the inputs--outputs with the users, a database, the network, ... To solve this problem, programmers invented solutions like the [mock objects](http://en.wikipedia.org/wiki/Mock_object) which are basically implementations of fake execution environments.
 
 Unfortunately tests are not exhaustive since the set of program inputs is usually infinite. Methods like [random testing](http://en.wikipedia.org/wiki/Random_testing) can extend the range of tested configurations, but are always limited to a finite set of inputs.
@@ -17,7 +17,7 @@ To the best of our knowledge, Coq is the only language with formal verification 
 * there are often hypothesis on the environment, so all execution paths may not be interesting,
 * the quality of a specification depends on its clarity and its similarities with the human intuition.
 
-## Write the scenarios
+### Write the scenarios
 We write our scenarios in [src/Scenarios.v](https://github.com/clarus/repos2web/blob/master/src/Scenarios.v). There is at least one scenario per function, for the cases in which the environment has no bugs (no file system errors) and the repository architecture is well-formed. For example, for the function:
 
     Definition get_packages (repository : LString.t) : C (option Packages.t) :=
@@ -35,7 +35,7 @@ we write the following scenario:
       apply (get_packages_of_names_ok repository packages).
     Defined.
 
-### What does this mean?
+#### What does this mean?
 
 This scenario is parametrized by any `repository` folder names and any lists of OPAM `packages`. It runs the function `get_packages` on `repository` in a "valid" environment and ensures that the result is `Some packages`, meaning that the repository was successfully parsed.
 
@@ -58,8 +58,8 @@ Coq tells us there nothing more to do, so we conclude by:
 
 The Coq type-checker accepts our scenario which means it is valid: we do not need to run it on every `(repository, packages)` tuples. Even if we used the tactical mode to define the scenario, we did not write any proofs: the scenario is valid *by-construction*. However, in some cases, proofs are required to help the type-checker with non-trivial equalities. See for example the `list_coq_files_ok` scenario. Over 13 scenarios, only 2 required proofs to help the type-checker.
 
-### What did we prove?
+#### What did we prove?
 We proved that, for any list of OPAM packages, given the "right answers" from the file system, the function `get_packages` will terminate without errors and will return `Some packages`. The "right answers" are defined by giving the "right answers" to `list_coq_files` and then giving the "right answers" to `get_packages_of_names`.
 
-## Next time
+### Next time
 We have seen how to formally verify an interactive program in Coq. [Next time](http://coq-blog.clarus.me/concurrency-with-promises-in-coq.html) we will see how to optimize this program using concurrency.

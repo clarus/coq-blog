@@ -4,7 +4,7 @@ It is a research project which aims to apply the pure and dependently typed [Coq
 
 For now [Pluto](https://github.com/coq-concurrency/pluto) can serve static websites, using event-based I/Os and lightweight threads to handle concurrent requests.
 
-## Use
+### Use
 The simplest way to install [Pluto](https://github.com/coq-concurrency/pluto) is to use [OPAM](http://opam.ocamlpro.com/) for Coq. See this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html) for more informations. Add the stable and unstable repositories:
 
     opam repo add coq-released https://coq.inria.fr/opam/released
@@ -20,10 +20,10 @@ Run it on some `html/` folder:
 
 Your website is now available on [localhost:8000](http://localhost:8000/).
 
-## Architecture
+### Architecture
 Coq is a pure language so it cannot directly express concurrency and I/Os. For that we use a Domain Specific Language (DSL) with new primitive constructs to describe impure computations. The architecture is implemented in the [coq-concurrency/system](https://github.com/coq-concurrency/system) project.
 
-### Operators
+#### Operators
 The `Read` and `Write` commands read or update atomically global references (shared by all the threads). `Ret` lifts a pure Coq expression, `Bind` sequences two computations. The `Send` constructor does an asynchronous call to the OS. It uses a handler with its own private memory (a lightweight thread), called each time an answer is sent to the request. The `Exit` command halts the program and stops all pending handlers.
 
 We decided to use fully asynchronous I/Os with lightweight threads for two reasons:
@@ -31,7 +31,7 @@ We decided to use fully asynchronous I/Os with lightweight threads for two reaso
 * it is generally considered more efficient than the synchronous system-calls plus system-threads model (see the evolution from the [Apache](http://www.apache.org/) 1 multi-threaded server to mono-threaded event-driven systems like [Node.js](http://nodejs.org/))
 * it corresponds more to what computers intrinsically are: the most primitive communication facilities on microprocessors are the [OUT instruction](http://x86.renejeschke.de/html/file_module_x86_id_222.html) and the [interruption mechanism](http://en.wikipedia.org/wiki/Interrupt). The [Direct Memory Access](http://en.wikipedia.org/wiki/Direct_memory_access) is a fastest solution in practice, but also relies on these primitives. Finally, this corresponds to the [Xen API](http://openmirage.org/wiki/xen-events) design, in the hope that some day Coq could be ported as an unikernel like OCaml with [MirageOS](http://www.openmirage.org/).
 
-### Implementation
+#### Implementation
 The implementation of this DSL is two folds. In Coq, a `run` function gives an executable semantics of the computations. The existence of an executable semantics is an improvement over other works which only give unrealized axioms for I/Os effects (for example in Haskell or in Idris, see [IO.idr](https://github.com/idris-lang/Idris-dev/blob/master/libs/prelude/IO.idr)).
 
 We also compile Coq programs to OCaml using a customized version of the [extraction mechanism](http://www.pps.univ-paris-diderot.fr/~letouzey/download/letouzey_extr_cie08.pdf) of Coq. The impure operators are compiled to impure OCaml operators realizing the effects, like sending messages to the OS.
@@ -50,12 +50,12 @@ In OCaml, the handlers are stored in the heap extracted from the Coq implementat
 
 ![Schema](static/images/pluto_runtime.svg "Implementation architecture")
 
-### Correction
+#### Correction
 There is no mechanism to prove properties about the effects yet (I/Os, shared memory, ...). However it is possible to certify the functional part of the server, or any interactive Coq application based on our runtime, using standard techniques in Coq (see for example the [Program extension](http://www.pps.univ-paris-diderot.fr/~sozeau/research/publications/Program-ing_Finger_Trees_in_Coq.pdf) of Matthieu Sozeau).
 
 We can also question the correctness of the compilation to OCaml, or whether the `run` function in Coq is faithful to the extracted code. We have no formal proof, but we designed the system with correctness in mind. In particular, we designed our DSL with a minimal "attack surface". The memory, the lightweight threads, the exit effect are compiled by monadic transformation in Coq and then using the standard extraction mechanism. For I/Os, there is no abstract `World` type which could lead to duplication in Coq. We just use a monad reader and monad writer, and messages are sent or read into a pipe. On the long term, we could dream of a formally proven Coq compiler and adapt it to our customized compilation of read/write effects.
 
-## Code extracts
+### Code extracts
 This is the main function of the server, in [pluto/Pluto.v](https://github.com/coq-concurrency/pluto/blob/master/Pluto.v):
 
     Definition program (argv : list LString.t) : C.t [] unit :=
@@ -95,7 +95,7 @@ The function `get` is parametrized by a handler `N -> C.t sig unit` which is a c
 
 We log the current time in RFC 1123 format with a welcome message and bind to the server socket. The handler is listening while there are new clients connecting, and runs the `handle_client` method for each. This program may never terminate, while we are writing pure Coq without explicit non-termination monad. The non-termination effect is provided by the monad reader, which is compiled to OCaml as an infinite loop listening to the system pipe.
 
-## Future work
+### Future work
 We learn many things writing a realistic example of a web server in Coq, especially in the way of implementing side effects. We also shown that it is possible to use Coq as a programming language to write interactive and concurrent softwares.
 
 Our main goal now is to extend our DSL of computations with a specification and a certification mechanism. We would like to write a specification of the non-purely functional part of our web server and prove its correctness, exploiting the unique ability of Coq to marry proofs and programs.

@@ -2,7 +2,7 @@ We will show you a typical workflow to create and publish a Coq package with [OP
 
 We assume you already know how to use OPAM to install Coq packages. If not, you can read this [tutorial](http://coq-blog.clarus.me/use-opam-for-coq.html).
 
-## Create a project
+### Create a project
 Go on [GitHub](https://github.com/) and make a new project, for example `that-super-proof`. Add a `LICENSE` file with your copyright if you want to make your package open-source (without a license a code is proprietary). I usually choose the [MIT](http://opensource.org/licenses/MIT) license, as one of the most permissive and popular:
 
     The MIT License (MIT)
@@ -35,10 +35,10 @@ Add a main file `All.v`:
 
 You can now commit your work.
 
-### The case of OCaml plugins
+#### The case of OCaml plugins
 If your project is a Coq plugin (containing [OCaml](https://ocaml.org/) files), you can get inspiration from the [Constructors](https://github.com/mattam82/Constructors) project of [Matthieu Sozeau](http://www.pps.univ-paris-diderot.fr/~sozeau/). This is an example of a simple OCaml plugin, including the branches `v8.4` and `v8.5` for compatibility with the different versions of Coq.
 
-## Compile
+### Compile
 We will use `coq_makefile` to generate a Makefile. Create a file `Make`:
 
     -R . ThatSuperProof
@@ -58,7 +58,7 @@ To compile your project, run:
 
 `coq_makefile` is clever and also generates an `install` rule, among over things.
 
-## Publish
+### Publish
 To publish a new version you need to make a release. In the GitHub page of your project, go to the *releases* section and add a new release named `1.0.0`. People tend to use the [SemVer](http://semver.org/) convention for the version names, as `MAJOR.MINOR.PATCH`:
 
 * `MAJOR`: major changes
@@ -107,5 +107,5 @@ The MD5 checksum is mandatory, and can be obtained with:
 
 You can test your own fork of the OPAM Coq repository using `opam repo add` on the folder `released` of your fork. Then, issue a pull-request with your new package.
 
-## Use the bench
+### Use the bench
 There is a bench system available on [coq-bench.github.io](http://coq-bench.github.io/). We test all the packages for each version of Coq. We host this service to help you to check that your packages compile for each platform, even development ones. Compatibility across Coq versions is not necessary but allows you to reach more users. You can specify the Coq versions you depend upon in the `depends` field of your `opam` files.

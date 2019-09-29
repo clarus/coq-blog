@@ -1,6 +1,6 @@
 [Last time](http://coq-blog.clarus.me/concurrency-with-promises-in-coq.html), we presented two primitives `Join` and `First` to write and specify concurrent programs with [Coq.io](http://coq.io/), using the concept of [promises](http://en.wikipedia.org/wiki/Futures_and_promises). We will explain how we implemented these primitives and give examples of concurrent programs.
 
-## Implementation
+### Implementation
 The promises are available in the package [coq-io](https://github.com/coq-io/io), starting from the version `2.1.0`. This package symbolically describes the primitive `Join` and `First`. They must be implemented for each  set of effects.
 
 For example, in [coq-io-system](https://github.com/coq-io/system) (which defines effects to interact with the system), we compile all the external calls and the computation primitives to [Lwt](http://ocsigen.org/lwt/) in [coq-io/src/Extraction.v](https://github.com/coq-io/system/blob/master/src/Extraction.v):
@@ -26,7 +26,7 @@ where we needed:
     join : 'a Lwt.t -> 'b Lwt.t -> ('a * 'b) Lwt.t
     first : 'a Lwt.t -> 'b Lwt.t -> ('a, 'b) Sum.t Lwt.t
 
-## Hello World
+### Hello World
 You can see a simple example of concurrent program in [coq-hello-world](https://github.com/coq-io/hello-world):
 
     Definition concurrent_hello_world (argv : list LString.t)
@@ -64,7 +64,7 @@ The specification of this program stays that it does exactly one thing: displayi
       apply Run.Ret.
     Defined.
 
-## Larger example and drawbacks
+### Larger example and drawbacks
 In the branch [#join](https://github.com/clarus/repos2web/tree/join) of [repos2web](https://github.com/clarus/repos2web), we modified our website generator for [OPAM](http://opam.ocamlpro.com/) repositories to read the packages descriptions concurrently. Our main modification is to use the `Join` operator in the recursive functions to make concurrent recursive calls:
 
     Fixpoint get_packages (repository : LString.t) (packages : Packages.t)

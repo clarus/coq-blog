@@ -10,7 +10,7 @@ There are two basic sum types:
 * `option A`: either `Some value` or `None` for an error
 * `A + E`: either `inl value` or `inr err` for an error
 
-## The ErrorHandlers package
+### The ErrorHandlers package
 Since there are no error combinators in the standard library, I wrote the [ErrorHandlers](https://github.com/clarus/coq-error-handlers) package:
 
     opam repo add coq-released https://coq.inria.fr/opam/released

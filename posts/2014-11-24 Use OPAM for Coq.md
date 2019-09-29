@@ -1,6 +1,6 @@
 [OPAM](http://opam.ocamlpro.com/) is a package manager edited by [OCamlPro](http://www.ocamlpro.com/). We will describe how to use it to handle [Coq](https://coq.inria.fr/) packages.
 
-## Install OPAM
+### Install OPAM
 Install OPAM by your preferred method. It is recommended to use the latest version (`1.2.2` as of May 7, 2015), which can be installed from the sources:
 
     curl -L https://github.com/ocaml/opam/releases/download/1.2.2/opam-full-1.2.2.tar.gz |tar -xz
@@ -16,7 +16,7 @@ By default the OPAM packages are installed in `~/.opam`. You can also have many 
 
 **Remark:** Some people also use the `switch` mechanism to handle many OPAM installations.
 
-## Add the repositories
+### Add the repositories
 To add the repository for the Coq packages:
 
     opam repo add coq-released https://coq.inria.fr/opam/released
@@ -29,7 +29,7 @@ To add the development versions of Coq:
 
     opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
 
-## Install a package
+### Install a package
 The Coq packages are in the namespace `coq-`. To list all of them:
 
     opam search coq-

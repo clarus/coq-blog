@@ -17,7 +17,7 @@ Usually we want to check many values, what we can do with a list:
 
 We map the `pred` function on the values `0`, `1`, `2`, `5` and check the results.
 
-## The CUnit package
+### The CUnit package
 For functions with several parameters, the trick of the `List.map` function does not work well because of the [currying](https://en.wikipedia.org/wiki/Currying). What need instead is a map over lists of tuples. I made the package [CUnit](https://github.com/clarus/coq-cunit) to provide such a map. Install it with [OPAM](use-opam-for-coq.html):
 
     opam repo add coq-released https://coq.inria.fr/opam/released

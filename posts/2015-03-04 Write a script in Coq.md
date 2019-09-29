@@ -2,7 +2,7 @@ We will explain how to write scripts in [Coq](https://coq.inria.fr/) using the l
 
 *There is now a newer OPAM website generator [opam-website](https://github.com/coq-io/opam-website). See the results on [coq.io/opam](http://coq.io/opam/).*
 
-## Get started
+### Get started
 Install the [coq-io-system](https://github.com/coq-io/system) package with OPAM to enable the system effects. See [Use OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html) to configure OPAM for Coq.
 
     opam repo add coq-released https://coq.inria.fr/opam/released
@@ -61,7 +61,7 @@ Compile and run the generated OCaml:
 
 This should print you the message `test` on the terminal!
 
-## Parse the OPAM repository
+### Parse the OPAM repository
 To write our script we need to understand the basis of how OPAM for Coq repositories are organized (for example in [opam-coq-archive](https://github.com/coq/opam-coq-archive)). All the packages are in the `packages` folders. There is one folder per package name, all prefixed by `coq-` because we are in the Coq namespace. In each package folder, there is one folder per version of the package with three files `descr`, `opam` and `url` to describe the package.
 
     packages/
@@ -76,7 +76,7 @@ To write our script we need to understand the basis of how OPAM for Coq reposito
 
 We define the data type of an OPAM repository in [src/Model.v](https://github.com/clarus/repos2web/blob/master/src/Model.v). In a first pass, we will generate an element of type `Packages.t`. This is a list of packages described by a name and a list of versions. In a second pass, we will generate an element of type `FullPackages.t`, by adding the description of each version and by computing each latest version using the (complex) [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version).
 
-### First pass
+#### First pass
 The first pass is described in [src/Main.v](https://github.com/clarus/repos2web/blob/master/src/Main.v) in the `Basic` module. The function `list_coq_files` lists the files/folders which are starting with the `coq-` prefix in a given `folder`:
 
     Definition list_coq_files (folder : LString.t) : C (option (list Name.t)) :=
@@ -117,7 +117,7 @@ We continue by defining more functions and conclude with:
 
 to get the list of packages in a repository folder (or `None` in case of error).
 
-### Second pass
+#### Second pass
 The second pass follows the same structure as the first one. The main trick is the function:
 
     (** Return the latest version, using Debian `dpkg` for comparison. *)
@@ -126,7 +126,7 @@ The second pass follows the same structure as the first one. The main trick is t
 
 which uses the `dpkg` command line tool to compare two versions numbers according to the [Debian ordering](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version). If you want to test it, the `dpkg` tool should be available on most Linux distribution, even on those which are not based on [Debian](https://www.debian.org/).
 
-## Render the HTML
+### Render the HTML
 We define the HTML rendering in [src/View.v](https://github.com/clarus/repos2web/blob/master/src/View.v). The last function is:
 
     Definition index (packages : FullPackages.t) : LString.t :=
@@ -160,5 +160,5 @@ We use the list of command line arguments `argv` to get the folder in which the 
 
     curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
 
-## Next time
+### Next time
 We have seen how to write a script in Coq doing file manipulations. [Next time](http://coq-blog.clarus.me/formally-verify-a-script-in-coq.html) we will see how to specify this script and prove it correct, using a reasoning by [use cases](http://en.wikipedia.org/wiki/Use_case).

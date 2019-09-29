@@ -2,7 +2,7 @@ We will present the classic [Hello World](http://en.wikipedia.org/wiki/%22Hello,
 
 The *Hello World* program exists in almost every languages, including [in White Space](http://en.wikipedia.org/wiki/List_of_Hello_world_program_examples#W). In Coq this is more complicated because the language is purely functional. This means that no effects can be done, in particular no inputs-outputs. This constraint is there to preserve the logical consistency of the system. However, we can still encode inputs-outputs by defining a [monad](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). This technique was popularized by the [Haskell](http://en.wikipedia.org/wiki/Haskell_%28programming_language%29) programming language.
 
-## Hello World
+### Hello World
 Using [OPAM for Coq](http://coq-blog.clarus.me/use-opam-for-coq.html), install the package [coq-io-system](https://github.com/coq-io/system):
 
     opam repo add coq-released https://coq.inria.fr/opam/released
@@ -36,7 +36,7 @@ to generate an [OCaml](https://ocaml.org/) file `main.ml`. We compile and run th
 
 This should display `Hello world!` on the terminal.
 
-### Specification
+#### Specification
 The specification of this program is very straightforward: *the program only prints "Hello world!" and quits* (here the specification is as long as the program itself, but this is not always the case). A simple way to write this specification is to describe an environment of the program which reacts to a single event: the printing of the message "Hello world!" on the terminal. You can express this environment as a program:
 
     (** The Hello World program only says hello. *)
@@ -48,7 +48,7 @@ The specification `hello_world_ok` is of type `Run.t (hello_world argv) tt`: thi
 
 This specification needs *no* proofs because it is valid *by construction*. We do not need any SMT solver, model checker or manual proof. The specification is valid because it is well-typed. Of course this example is very simple, so we will see a slightly more complex one.
 
-## What is your name?
+### What is your name?
 This program asks for your name and replies with your name:
 
     (** Ask for the user name and answer hello. *)
@@ -68,7 +68,7 @@ executes `e1`, assigns the result to `x` and then executes `e2`. The `do!` is a 
 
 You can run this program as before by compilation to OCaml.
 
-### Specification
+#### Specification
 We have two [use cases](http://en.wikipedia.org/wiki/Use_case) for the `your_name` program:
 
 * when the user enters a name,

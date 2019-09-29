@@ -4,7 +4,7 @@ This is a demo blog engine where a user can login (no passwords), add, edit or d
 
 The aim of this project is to demonstrate that applications with I/Os can be written and specified naturally using the (new) concept of [symbolic simulations in Coq](http://coq-blog.clarus.me/checking-concurrent-programs-with-symbolic-simulations.html).
 
-## Run
+### Run
 Get the sources:
 
     git clone https://github.com/clarus/coq-chick-blog.git
@@ -33,13 +33,13 @@ Run on [localhost:8008](http://localhost:8008/):
 
     ./chickBlog.native
 
-### Dockerfile
+#### Dockerfile
 A Dockerfile is provided to run ChickBlog in an isolated environment using [Docker](https://www.docker.com/):
 
     docker build --tag=chick-blog .
     docker run -ti -p 8008:8008 chick-blog
 
-## Specification
+### Specification
 The blog is defined in `Main.v` as the function:
 
     Definition server (path : Path.t) (cookies : Cookies.t) : C.t Response.t.
@@ -57,7 +57,7 @@ A computation can either:
 
 The purity of Coq ensures that each request is answered exactly once in finite time. We specify the behavior of the server in `Spec.v`.
 
-### Scenarios
+#### Scenarios
 A scenario is a set of runs of the server. A type-checking scenario shows that the server behaves as expected in a certain use case. For example, we check that when we create, edit and view a post we get the same result as what we entered. You can think of a scenario as a unit test with universally quantified variables.
 
 Here is a simple check of the execution of the index page:
@@ -73,7 +73,7 @@ Here is a simple check of the execution of the index page:
 
 Given any `cookies` and `post_headers`, we execute the server handler on the page `Request.Path.Index`. The handler does exactly one system call, to which we answer `Some post_headers`, playing the role of the system. The final response of the server is then `Response.Public.Index post_headers`. Note that we do not need to execute `index_ok` on every instances of `cookies` and `post_headers`: since the type-system of Coq is supposed sound, it is enough to type-check `index_ok`.
 
-### Privacy
+#### Privacy
 We check that, for any runs of a program, an unauthenticated user cannot access private pages (like edit) or modify the file system with system calls.
 
 *More comments on [Hacker News](https://news.ycombinator.com/item?id=9037115), [Reddit](https://www.reddit.com/r/programming/comments/2vn3xa/a_blog_engine_written_and_proven_in_coq/) and [Lobsters](https://lobste.rs/s/7ugonf/a_blog_engine_written_and_proven_in_coq/comments/4oholx).*

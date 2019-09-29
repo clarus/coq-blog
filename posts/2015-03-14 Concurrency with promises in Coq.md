@@ -1,6 +1,6 @@
 We will present two primitives to write concurrent (and interactive) programs in [Coq](http://coq.inria.fr/), using the concept of [promises](http://en.wikipedia.org/wiki/Futures_and_promises) in the library [Coq.io](http://coq.io/). We will also show how to formally specify programs written using promises.
 
-## Primitives for concurrency
+### Primitives for concurrency
 To write an interactive application we quickly need a way to do non-blocking inputs--outputs operations. There are many approaches to do non-blocking operations or concurrency, for example:
 
 * blocking calls in system threads
@@ -11,7 +11,7 @@ To write an interactive application we quickly need a way to do non-blocking inp
 
 We chose to use promises, in the style of the [Lwt library](http://ocsigen.org/lwt/) for [lightweight threads](http://en.wikipedia.org/wiki/Light-weight_process) in [OCaml](https://ocaml.org/). The promises can be implemented efficiently using lightweight threads, while being simpler to use than an event loop or callbacks. The actor model is another interesting approach which we will study later.
 
-### Sequential computations
+#### Sequential computations
 We recall the definition of our interactive sequential computations (see the [coq-io](https://github.com/coq-io/io) package):
 
     Module C.
@@ -37,7 +37,7 @@ The effects are a type of `command` and a type of `answer`, dependent on the val
 
 The `Let` operator is also called the *bind* in the terminology of [monads](http://en.wikipedia.org/wiki/Monad_%28functional_programming%29). The effects `E` typically represent external calls to the system. You can for example look at the [API](http://clarus.github.io/doc/io-system/Io.System.System.html) of the [coq-io-system](https://github.com/coq-io/system) library, which provides basic calls to manipulates files and the terminal.
 
-### Join
+#### Join
 We add the `Join` operator to the computations:
 
     | Join : forall {A B : Type}, t E A -> t E B -> t E (A * B)
@@ -46,7 +46,7 @@ The program `Join x y` runs the two computations `x` and `y` in parallel and ret
 
 Note that since our programs are pure, there are no shared states between `x` and `y`. We will see in a future post how to represent a shared state in a concurrent program in Coq.
 
-### First
+#### First
 The `First` operator is defined as:
 
     | First : forall {A B : Type}, t E A -> t E B -> t E (A + B)
@@ -59,7 +59,7 @@ This operator is dangerous because one of our computations can get canceled. The
 
 to make sure the program terminates after 10 seconds (we suppose that `sleep 10` is the computation which does nothing but terminating after 10 seconds).
 
-## Specification of promises
+### Specification of promises
 We specify our computations using [use-cases](http://en.wikipedia.org/wiki/Use_case) described by runs:
 
     Module Run.
@@ -81,7 +81,7 @@ A run can be a run of the computation:
 
 We will extend our definition of runs with new cases for the primitives `Join` and `First`.
 
-### Join
+#### Join
 We define the run of a `Join` by:
 
     | Join : forall {E A B} {c_x : C.t E A} {x : A} {c_y : C.t E B} {y : B},
@@ -91,7 +91,7 @@ This means that a run of `Join x y` is a couple of runs for `x` and `y`. Equival
 
 *A priori*, the interactions of the threads `x` and `y` are not specified. This is up to the user to express these interactions in the specification, if there are some.
 
-### First
+#### First
 There are two ways to run a `First`:
 
     | Left : forall {E A B} {c_x : C.t E A} {x : A} {c_y : C.t E B},
@@ -111,5 +111,5 @@ We could ask: yes, but sometimes both `x` and `y` are actually executed! And if 
 
 and the reasons of these definitions are similar.
 
-## Next time
+### Next time
 [Next time](http://coq-blog.clarus.me/implementation-of-promises-for-coq.html) we will see how to implement the primitives `Join` and `First`, to generate efficient and non-blocking interactive programs written in Coq.

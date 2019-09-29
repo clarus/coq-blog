@@ -9,7 +9,7 @@ We hope this approach will provide a good compromise between full specifications
 
 All the following code extracts are in Coq and available on [coq-concurrency/system#simulation-callbacks](https://github.com/coq-concurrency/system/tree/simulation-callbacks).
 
-## Calculus with handlers
+### Calculus with handlers
 To allow simpler reasoning, we want our calculus to be somehow "deterministic". A first way is to remove shared mutable variables. Then the only source of non-determinism is the order of the input events. Having shared mutable states is often useful, typically to implement a data storage. Still, we will try to go as far as possible without mutable states.
 
 An second way to reduce non-determinism is to restrict how we are waiting for events and doing threads. We define a calculus with only asynchronous calls and forks (without joins):
@@ -53,7 +53,7 @@ These examples are sequential programs. Note that in practice they may not termi
 
 This program concurrently waits for `fuel` user inputs, prints them and stops.
 
-## Simulations
+### Simulations
 A simulation, or a run, is a co-program over a concurrent and interactive program. It answers to the requests of the program, playing the role of the environment. A simulation is defined by induction over the program's structure. This has two advantages:
 
 * by construction, a simulation must give exactly one answer per request
@@ -96,7 +96,7 @@ We check that, for any message entered by the user, the program will only print 
 
 This simulation is recursive to follow the shape of the simulated program. It reuses the simulation `run_echo` of `echo`. The simulation is defined for any order of interleaving of the message events.
 
-## Time server
+### Time server
 In the file [Simulation.v](https://github.com/coq-concurrency/system/blob/simulation-callbacks/Simulation.v) we give an example of a simple time server. The clients can connect and get the current time of the server. Unlike for the previous examples, we do not cover all possible runs. Instead we give two sets of simulations:
 
 * a first one where the server socket cannot be bound
@@ -104,7 +104,7 @@ In the file [Simulation.v](https://github.com/coq-concurrency/system/blob/simula
 
 We do not cover all the cases, for example the case of a client socket which cannot be written to. We believe this is both a weakness and a strength of this approach. Contrary to a full specification, not all the execution paths are tested. But simulations are simple to write, while covering more cases than traditional tests.
 
-## Future work
+### Future work
 We want to extend this method to check more complex programs, like a database or a chat-server. For that we should first extend the expressiveness of the calculus, and so of the simulations.
 
 We also want to relate this method to the specifications plus proofs approach. A first way could be to have simulations which *by construction* cover all the execution paths. An other way could be to express properties over simulations to enforce a specification over any simulations.
