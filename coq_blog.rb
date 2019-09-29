@@ -10,6 +10,14 @@ class Blog
     @posts = Dir.glob("posts/*.md").map {|file_name| Post.new(file_name)}
       .sort_by {|post| post.date}.reverse
   end
+
+  def public_posts
+    @posts.select {|post| not post.wip?}
+  end
+
+  def wip_posts
+    @posts.select {|post| post.wip?}
+  end
 end
 
 class MarkdownRender < Redcarpet::Render::HTML
@@ -38,6 +46,10 @@ class Post
   def date_string
     @date.strftime("%B %e, %Y")
   end
+
+  def wip?
+    @name.downcase.include?("wip")
+  end
 end
 
 def render_erb(file_name, binding)
@@ -54,7 +66,7 @@ end
 
 blog = Blog.new("Coq blog - Guillaume Claret", "http://coq-blog.clarus.me/", "coqblog")
 
-for page in ["index.html", "rss.xml"] do
+for page in ["index.html", "wip.html", "rss.xml"] do
   File.open("blog/#{page}", "w") do |f|
     f << render_erb("#{page}.erb", binding)
   end

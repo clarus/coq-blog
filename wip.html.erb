@@ -1,0 +1,16 @@
+<%= header(blog, h(blog.title)) %>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <h1>WIP articles</h1>
+    <ul>
+    <% blog.wip_posts.each do |post| %>
+      <li><a href="<%= u post.url %>"><%= h post.name %></a> <%= post.date_string %></li>
+    <% end %>
+    </ul>
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<%= footer %>
