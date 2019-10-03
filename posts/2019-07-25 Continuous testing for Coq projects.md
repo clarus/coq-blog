@@ -1,11 +1,11 @@
-Testing that a Coq project works with different Coq versions may be time consuming. This is necessary to deliver with confidence new project releases. We show a setup to run automated testing with [Travis CI](https://travis-ci.com/) in [GitHub](https://github.com/) using pre-compiled Coq instances. Thanks to that setup we can check new pull-requests in a few minutes for small projects.
+Testing that a&nbsp;[Coq](https://coq.inria.fr/) project works with different&nbsp;Coq versions may be time consuming. This is necessary to deliver with confidence new project releases.&nbsp;[Travis&nbsp;CI](https://travis-ci.com/) is a service to run tests on&nbsp;[GitHub](https://github.com/) projects and is free for open-source code. We show a setup to run automated testing with&nbsp;Travis&nbsp;CI using pre-compiled&nbsp;Coq instances and [opam](https://opam.ocaml.org/). Thanks to that setup we can automatically and quickly check new pull-requests and commits.
 
 This configuration is directly inspired by the [CI setup](https://github.com/coq-community/docker-coq/wiki/CI-setup) documentation written by [Erik Martin-Dorel](https://github.com/erikmd).
 
 ![Travis CI report on a pull-request](static/images/travis-ci/build-report.png "Travis CI report on a pull-request")
 
 ## Setting up Travis CI
-To setup Travis CI, we take the example of the [github.com/coq-io/system](https://github.com/coq-io/system) project. We need to create two files at the root of the project:
+To show the setup&nbsp;[Travis&nbsp;CI](https://travis-ci.com/), we take the example of the [github.com/coq-io/system](https://github.com/coq-io/system) project. We need to create two files at the root of the project:
 
 * `coq-io-system.opam` to describe the dependencies;
 * `.travis.yml` to configure and activate Travis CI.
@@ -108,7 +108,7 @@ We add a file `.travis.yml` with the following content:
     after_script:
     - docker stop COQ  # optional
 
-This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
+This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam, what is crucial to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
 
 * check if either:
   * the platform is supposed to be supported `if [ "${SHOULD_SUPPORT}" = "true" ]`,
@@ -117,6 +117,10 @@ This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to che
 * install the project in verbose mode `opam install ${PACKAGE_NAME} -v -y`.
 
 ## Using Travis CI
-You may need to activate Travis CI for your project in the [settings page](https://travis-ci.com/account/repositories). Then for each pull-request you will see a green or red mark precising if the project passed the tests, along with detailed logs:
+You may need to activate Travis CI for your project in the [settings page of&nbsp;Travis&nbsp;CI](https://travis-ci.com/account/repositories). Then for each pull-request or commit you will see a green or red mark precising if the project passed the tests, along with detailed logs when you click on it:
 
-![Validated pull-request](static/images/travis-ci/pull-request.png "Commits in a pull-request")
+![Commits in a pull-request](static/images/travis-ci/pull-request.png "Commits in a pull-request")
+
+![Error logs](static/images/travis-ci/error-logs.png "Error logs")
+
+Thanks for reading!
