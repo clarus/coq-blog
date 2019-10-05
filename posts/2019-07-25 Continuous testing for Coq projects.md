@@ -1,4 +1,4 @@
-Testing that a&nbsp;[Coq](https://coq.inria.fr/) project works with different&nbsp;Coq versions may be time consuming. This is necessary to deliver with confidence new project releases.&nbsp;[Travis&nbsp;CI](https://travis-ci.com/) is a service to run tests on&nbsp;[GitHub](https://github.com/) projects and is free for open-source code. We show a setup to run automated testing with&nbsp;Travis&nbsp;CI using pre-compiled&nbsp;Coq instances and [opam](https://opam.ocaml.org/). Thanks to that setup we can automatically and quickly check new pull-requests and commits.
+Testing that a&nbsp;[Coq](https://coq.inria.fr/) project works with different&nbsp;Coq versions may be time consuming. This is necessary to deliver with confidence new project releases.&nbsp;[Travis&nbsp;CI](https://travis-ci.com/) is a service to run tests on&nbsp;[GitHub](https://github.com/) projects and is free for open-source code. We show a setup to run automated testing with&nbsp;Travis&nbsp;CI using pre-compiled&nbsp;Coq instances and [opam](https://opam.ocaml.org/). Thanks to that setup, we can automatically and quickly check new pull-requests and commits.
 
 This configuration is directly inspired by the [CI setup](https://github.com/coq-community/docker-coq/wiki/CI-setup) documentation written by [Erik Martin-Dorel](https://github.com/erikmd).
 
@@ -8,10 +8,10 @@ This configuration is directly inspired by the [CI setup](https://github.com/coq
 To show the setup&nbsp;[Travis&nbsp;CI](https://travis-ci.com/), we take the example of the [github.com/coq-io/system](https://github.com/coq-io/system) project. We need to create two files at the root of the project:
 
 * `coq-io-system.opam` to describe the dependencies;
-* `.travis.yml` to configure and activate Travis CI.
+* `.travis.yml` to configure and activate&nbsp;Travis&nbsp;CI.
 
 ## Describing the dependencies
-We create a file `coq-io-system.opam` with the following content:
+We create an&nbsp;[opam](https://opam.ocaml.org/) file&nbsp;`coq-io-system.opam` with the following content:
 
     version: "dev"
 
@@ -53,8 +53,10 @@ This file describes the dependencies of the project. It can list any other opam 
     # installing the package
     opam pin add coq-io-system . --kind=path -y
 
+Later on, you may want to publish your package in opam. You can just take this file content and create a pull-request on the [Coq repository](https://github.com/coq/opam-coq-archive). Since this opam file is used for continuous testing, you can be pretty confident that your package is correct.
+
 ## Configuring Travis CI
-We add a file `.travis.yml` with the following content:
+We add a&nbsp;[Travis&nbsp;CI](https://travis-ci.com/) file&nbsp;`.travis.yml` with the following content:
 
     dist: bionic
     language: generic
@@ -108,7 +110,7 @@ We add a file `.travis.yml` with the following content:
     after_script:
     - docker stop COQ  # optional
 
-This YAML file explains to [Travis CI](https://travis-ci.com/) what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam, what is crucial to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
+This YAML file explains to&nbsp;Travis&nbsp;CI what to do to check the project. We use the [coqorg/coq](https://hub.docker.com/r/coqorg/coq) Docker images. These images have pre-compiled versions of Coq with opam, what is crucial to speedup the tests. For each architecture from Coq `8.4` to Coq `8.9` we:
 
 * check if either:
   * the platform is supposed to be supported `if [ "${SHOULD_SUPPORT}" = "true" ]`,
