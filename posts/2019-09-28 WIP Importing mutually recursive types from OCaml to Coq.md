@@ -1,5 +1,7 @@
 In order to make&nbsp;[coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) usable on a maximum of&nbsp;[OCaml](https://ocaml.org/) programs, we should handle mutually recursive types. We show how we import these types to&nbsp;[Coq](https://coq.inria.fr/) and the main differences between the two languages. As a result, more&nbsp;OCaml programming patterns should be supported by&nbsp;coq-of-ocaml.
 
+*This work was financed by [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to verify the OCaml implementation of the&nbsp;[Tezos](https://tezos.com/) blockchain.*
+
 ## Example
 Take the following mutually recursive definition of a tree in&nbsp;OCaml:
 
