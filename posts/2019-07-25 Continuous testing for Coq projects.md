@@ -68,12 +68,13 @@ We add a&nbsp;[Travis&nbsp;CI](https://travis-ci.com/) file&nbsp;`.travis.yml` w
       global:
       - PACKAGE_NAME="coq-io-system"
       matrix:
-      - COQ_IMAGE="coqorg/coq:8.4"
-      - COQ_IMAGE="coqorg/coq:8.5" SHOULD_SUPPORT="true"
-      - COQ_IMAGE="coqorg/coq:8.6" SHOULD_SUPPORT="true"
-      - COQ_IMAGE="coqorg/coq:8.7" SHOULD_SUPPORT="true"
-      - COQ_IMAGE="coqorg/coq:8.8" SHOULD_SUPPORT="true"
-      - COQ_IMAGE="coqorg/coq:8.9" SHOULD_SUPPORT="true"
+      - COQ_IMAGE="coqorg/coq:8.4"  SHOULD_SUPPORT="false"
+      - COQ_IMAGE="coqorg/coq:8.5"  SHOULD_SUPPORT="true"
+      - COQ_IMAGE="coqorg/coq:8.6"  SHOULD_SUPPORT="true"
+      - COQ_IMAGE="coqorg/coq:8.7"  SHOULD_SUPPORT="true"
+      - COQ_IMAGE="coqorg/coq:8.8"  SHOULD_SUPPORT="true"
+      - COQ_IMAGE="coqorg/coq:8.9"  SHOULD_SUPPORT="true"
+      - COQ_IMAGE="coqorg/coq:8.10" SHOULD_SUPPORT="true"
 
     install: |
       # Prepare the COQ container
