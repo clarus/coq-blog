@@ -35,7 +35,7 @@ By applying&nbsp;[coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) on this 
 We transform algebraic data types to&nbsp;Coq's inductive types. We use a notation to implement the type synonym&nbsp;`leaf`. This is a trick because Coq only supports inductive types in mutual definitions. See the [documentation on notations](https://coq.inria.fr/refman/user-extensions/syntax-extensions.html?highlight=notation#reserving-notations) for more information. We rename the&nbsp;`leaf` type parameter&nbsp;`'content` instead of&nbsp;`'a` to avoid a name collision in&nbsp;Coq. The type parameters of the constructors are set implicit with the command&nbsp;`Arguments` to keep the behavior of&nbsp;OCaml.
 
 ## General mechanism
-We handle&nbsp;`type ... and ...` definitions with algebraic data types (including&nbsp;GADTs) and type synonyms. We do not handle abstract types. For records in mutual definitions, one can use a type synonym to a more generic record. For example:
+We handle&nbsp;`type ... and ...` definitions with algebraic data types (including&nbsp;GADTs, "Generalized Algebraic Data Types") and type synonyms. We do not handle abstract types. For records in mutual definitions, one can use a type synonym to a more generic record. For example:
 
     type expression =
       | Number of int
@@ -59,13 +59,13 @@ can be rewritten as:
 
 in order to be imported into&nbsp;Coq.
 
-In&nbsp;Coq, there is a distinction between type variables on the left and on the right of the&nbsp;`:`:
+In&nbsp;Coq, there is a distinction between type variables on the left (type parameters) and on the right of the&nbsp;`:` (type indices):
 
     Inductive t (A1 A2 ... : Type) : forall (B1 B2 ... : Type), Type :=
     | Constr1 : ... -> t A1 A2 ... C1 C2 ...
     | ...
 
-The variables&nbsp;`Ai` do not behave the same as the variables&nbsp;`Bi`. Type variables on the left have the constraint to be the same for each constructor. When used, they simplify the typing of the pattern matching. Typically, in&nbsp;GADTs, type variables are on the right while in non-GADT algebraic data types there are on the left. In mutually recursive inductive types there is one more constraint: the type variables on the left must be the same for each type. We consider a type variable to be "on the left" if it appear with the same name in each&nbsp;OCaml constructor and the type name definition. For example:
+The variables&nbsp;`Ai` do not behave the same as the variables&nbsp;`Bi`. Type parameters have the constraint of being the same for each constructor. When used, they simplify the typing of the pattern matching. Typically, in&nbsp;GADTs, type variables are type indices while in non-generalized algebraic data types they are type parameters. In mutually recursive inductive types there is one more constraint: the type parameters must be the same for each type. We consider a type variable to be a parameter if it appears with the same name in each&nbsp;OCaml constructor and in the type definition. For example:
 
     type ('a, 'b) arith =
       | Int : 'a * int -> ('a, int) arith
@@ -83,13 +83,13 @@ is imported to:
     Arguments Eq {_}.
     Arguments Plus {_}.
 
-Here `'a` becomes a "left" variable and `'b` a right variable.
+Here we transform `'a` to a type parameter and `'b` to a type index.
 
 ## Limitations
 Many&nbsp;OCaml programs define all types as mutually recursive by default. In&nbsp;Coq this is usually very difficult as:
 
 * only algebraic and synonym types can be mutual;
-* all type variables on the left must be the same;
+* all type parameters must be the same;
 * the "strictly positive" constraint in&nbsp;Coq prevents some constructions (such as having a type as a type parameter for another);
 * the proofs or the definition of recursive functions on mutually recursive types is more complicated than with simple recursive types.
 
