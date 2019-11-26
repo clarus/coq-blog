@@ -71,12 +71,12 @@ For the function&nbsp;`print_boxed_printable`, we use a parameter&nbsp;`Printabl
         (BoxedPrintable.(BoxedPrintable.Printable).(Printable.to_string)
           BoxedPrintable.(BoxedPrintable.value)).
 
-Note that the path to access to the&nbsp;`to_string` function is&nbsp;Coq is more verbose and more explicit than in&nbsp;OCaml.
+Note that the path to access the&nbsp;`to_string` function in&nbsp;Coq is more verbose and more explicit than in&nbsp;OCaml.
 
 ## What we support
-We support first-class modules with values, abstract types and type synonyms. We do not support first-class modules with other kind of fields, such as the definition of new algebraic data types. We do not support functors (although we support first-class functions on first-class modules).
+We support first-class modules with values, abstract types and type synonyms. We do not support first-class modules with other kinds of fields, such as the definition of new algebraic data types. We do not support functors (although we support first-class functions on first-class modules).
 
-A difficulty is to be able to distinguish between first-class modules and plain modules. This is necessary because we import first-class modules to dependent records and plain modules to&nbsp;Coq modules. For example, for projections, the syntax in&nbsp;OCaml is the same in both cases but different in&nbsp;Coq. When accessing a field of a module, we consider the module to be first-class if there exists a signature of the same shape. Once we found the name of the signature, we generate a call to the corresponding projection in&nbsp;Coq. If there are more than one signature corresponding to a module we generate an error. This can be the case because&nbsp;OCaml modules are not generative by default. The strategy to decide if a module is first-class is a heuristic, we may reconsider it latter.
+A difficulty is to be able to distinguish between first-class modules and plain modules. This is necessary because we import first-class modules to dependent records and plain modules to&nbsp;Coq modules. For example, for projections, the syntax in&nbsp;OCaml is the same in both cases but different in&nbsp;Coq. When accessing a field of a module, we consider the module to be first-class if there exists a signature of the same shape. Once we found the name of the signature, we generate a call to the corresponding projection in&nbsp;Coq. If there are more than one signature corresponding to a module we generate an error. This can be the case because&nbsp;OCaml modules are not generative by default (we can make generative&nbsp;OCaml modules by&nbsp;[adding a&nbsp;`()` parameter](https://softwareengineering.stackexchange.com/questions/326304/what-is-the-difference-between-applicative-and-generative-modules-and-type-clas)). Our strategy to decide if a module is first-class is a heuristic, we may reconsider it later.
 
 ## Set example
 Here is the definition of sets as first-class modules, extracted from the&nbsp;[Tezos source code](https://gitlab.com/tezos/tezos/):
