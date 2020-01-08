@@ -29,7 +29,7 @@ The module&nbsp;`Printable` encapsulates both a type&nbsp;`t` and some associate
       Arguments signature : clear implicits.
     End Printable.
 
-Since the type&nbsp;`t` is not known at this point, we model it with a type parameter&nbsp;`t`. Later on, when someone uses the syntax&nbsp;`with type t = ...`, we call the&nbsp;`signature` with the value for&nbsp;`t`. We define a synony field &nbsp;`t := t` to have a uniform way to access to the fields of the module. We put the whole record into a module&nbsp;`Printable` to namespace the projections and prevent name collisions.
+Since the type&nbsp;`t` is not known at this point, we model it with a type parameter&nbsp;`t`. Later on, when someone uses the syntax&nbsp;`with type t = ...`, we call the&nbsp;`signature` with the value for&nbsp;`t`. We define a synonym field &nbsp;`t := t` to have a uniform way to access to the fields of the module. We put the whole record into a module&nbsp;`Printable` to namespace the projections and prevent name collisions.
 
 We generate the following Coq code for the&nbsp;`print_on_the_terminal` function:
 
