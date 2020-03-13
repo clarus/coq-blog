@@ -105,11 +105,11 @@ Note the `[@coq_match_gadt]` on the `match` and the type annotations on the vari
     Definition to_string {A : Set} (kind : int_or_string A) (x : A) : string :=
       match (kind, x) with
       | (Int, _ as x) =>
-        let 'existT _ tt x := obj_magic_exists (fun _ => Z) x in
-        obj_magic string (OCaml.Stdlib.string_of_int x)
+        let 'existT _ tt x := cast_exists (fun _ => Z) x in
+        cast string (OCaml.Stdlib.string_of_int x)
       | (String, _ as x) =>
-        let 'existT _ tt x := obj_magic_exists (fun _ => string) x in
-        obj_magic string x
+        let 'existT _ tt x := cast_exists (fun _ => string) x in
+        cast string x
       end.
 
 We convert the GADT `int_or_string` to an inductive `int_or_string_gadt` without annotations. We generate two axioms in each branch of the `match`, to cast:
@@ -117,20 +117,20 @@ We convert the GADT `int_or_string` to an inductive `int_or_string_gadt` without
 * the variables introduced by the pattern;
 * the result of the branch.
 
-The axiom `obj_magic` is the equivalent in Coq of the OCaml's [Obj.magic](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Obj.html) cast. It has the following signature:
+The axiom `cast` is the equivalent in Coq of the OCaml's [Obj.magic](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Obj.html) cast. It has the following signature:
 
-    Axiom obj_magic : forall {A : Set} (B : Set), A -> B.
+    Axiom cast : forall {A : Set} (B : Set), A -> B.
 
 We say that:
 
-* `obj_magic` behaves as the identity function when `A` is equal to `B`;
+* `cast` behaves as the identity function when `A` is equal to `B`;
 * is undefined in other cases.
 
 To specify this behavior, we use the following axiom:
 
-    Axiom obj_magic_eval : forall {A : Set} {x : A}, obj_magic A x = x.
+    Axiom cast_eval : forall {A : Set} {x : A}, cast A x = x.
 
-While doing proofs, we must use the axiom `obj_magic_eval` to evaluate `obj_magic` by proving that the types `A` and `B` are the same. Doing so, we also verify that the type unifications of the type-checker of OCaml are indeed correct. The `obj_magic_exists` axiom is like `obj_magic` with the ability to introduce some existential variables when needed.
+While doing proofs, we must use the axiom `cast_eval` to evaluate `cast` by proving that the types `A` and `B` are the same. Doing so, we also verify that the type unifications of the type-checker of OCaml are indeed correct. The `cast_exists` axiom is like `cast` with the ability to introduce some existential variables when needed.
 
 ### Existential variables
 Types with existential variables are a special case of GADTs, where the type parameters are the same for all the constructors. For example, to represent a value which can be converted to a `string`, we can use:
