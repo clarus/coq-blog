@@ -1,6 +1,48 @@
-[coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) is a compiler from the [OCaml](https://ocaml.org/) language to [Coq](https://coq.inria.fr/). It now supports the conversion of the [full Tezos protocol](https://clarus.github.io/coq-of-ocaml/examples/tezos/), composed of around 35.000 lines of code. We present how we currently convert the [OCaml's GADTs](https://caml.inria.fr/pub/docs/manual-ocaml/gadts.html), and especially the new mechanism of type erasure propagation.
+[coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) is a compiler from the [OCaml](https://ocaml.org/) language to [Coq](https://coq.inria.fr/). It now supports the conversion of the [full Tezos protocol](https://clarus.github.io/coq-of-ocaml/examples/tezos/), composed of around 35.000 lines of code. The [OCaml's GADTs](https://caml.inria.fr/pub/docs/manual-ocaml/gadts.html) are a challenge to compile, as they have no direct equivalent in Coq. We present how we currently convert the GADTs, and especially the new mechanism of type erasure propagation.
 
-The general idea is to erase the type parameters from the GADTs or from phantom types, transitively propagating the erasure. This is important to erase unused type variables in order not to block the type inference mechanism of Coq. Indeed, when a type variable is not used:
+## Introduction
+Let us look at a short example of GADT which we cannot directly compile to Coq. If we define the annotated trees of integers with a&nbsp;`sum` function for trees of two elements:
+
+    type _ t =
+      | Leaf : int -> int t
+      | Node : 'a t * 'b t -> ('a * 'b) t
+
+    let sum (tree : (int * int) t) : int =
+      match tree with
+      | Node (Leaf x, Leaf y) -> x + y
+
+a direct translation to Coq could be:
+
+    Inductive t : Set -> Set :=
+    | Leaf : Z -> t Z
+    | Node : forall {A B : Set}, t A -> t B -> t (A * B).
+
+    Definition sum (tree : t (Z * Z)) : Z :=
+      match tree with
+      | Node (Leaf x) (Leaf y) => x + y
+      end.
+
+but this causes the following error:
+
+    Error: Non exhaustive pattern-matching: no clause found for pattern Leaf _
+
+Coq cannot decide that this pattern-matching is exhaustive because types are not comparable in Coq. One could even add an axiom stating that:
+
+    Z = Z * Z
+
+and we could not derive a contradiction as these two types have the same cardinality. See this [discussion](https://coq.discourse.group/t/inequality-between-types/106) on type equality for more information. A solution with dependent types could be to use tags (which are values) to annotate the type&nbsp;`t`. We can say that with dependent types we "match values" while with GADTs we "unify types".
+
+Another issue is the fact that OCaml unifies polymorphic type variables of other values in the&nbsp;`match`. In Coq we can use the [convoy pattern](http://adam.chlipala.net/cpdt/html/MoreDep.html) to achieve similar results. Finally, having a type appearing as a type parameter for itself in a GADT definition may break the strict positivity constraint and make Coq to refuse the type definition.
+
+The main idea of our solution is to erase the type parameters of the GADTs. When there is a match with a GADT value, we need a way to get back the information we lost erasing the types. Using OCaml attributes to guide coq-of-ocaml, the user can add in the generated code:
+
+* a `match` branch for the impossible cases;
+* some casts on the variables introduced by the `match` patterns;
+* a cast on the results of the `match` branches.
+
+We define the impossible `match` branch result and the casts operators in Coq using axioms.
+
+We transitively propagate the type erasures from GADTs and phantom types. Erasing unused type variables is important in order not to block the type inference mechanism of Coq. Indeed, when a type variable is not used:
 
     Definition id_nat {A : Set} (n : nat) : nat := n.
 
@@ -13,14 +55,6 @@ Coq often reacts with the following error:
     Error: Cannot infer the implicit parameter A of id_nat whose type is "Set".
 
 even if any set could fit for `A`.
-
-When there is a match on a GADT, we need a way to get back the information we lost erasing the types. Using OCaml attributes, we can optionally add:
-
-* an impossible branch;
-* casts on the variables introduced by patterns;
-* casts on the results of `match` branches.
-
-We define the impossible `match` branch and the casts with axioms.
 
 ## Definition of types
 We consider an algebraic type definition in OCaml to be a GADT if the return type parameters of some constructors are not (different) polymorphic type variables. Here is an example of GADT:
@@ -64,7 +98,7 @@ We transform the previous types into the following Coq code:
     Inductive printable : Set :=
     | Printable : forall {a : Set}, a -> (a -> string) -> printable.
 
-For the `expr` type we remove the type parameter (it does not change the information available at runtime). We transform the `ast` type keeping the type parameter `loc`. We use a `forall` quantifier in the `Printable` constructor to encode the existential type variable `a`.
+For the `expr` type we remove the type parameter. Note that it does not change the information available at runtime. We transform the `ast` type keeping the type parameter `loc`. We use a `forall` quantifier in the `Printable` constructor to encode the existential type variable `a`.
 
 ## Type expressions
 We apply the erasure of unused types to type expressions. For example, with the following OCaml code:
@@ -91,7 +125,7 @@ We consider a type parameter to be unused if:
 * is a GADT type parameter, or;
 * is only used by types which do not use their argument (such as in `num_with_label`).
 
-Thanks to this propagation of erasure, we limit the number of type parameters appearing in the generated types. This is helpful because with the erasure of GADT parameters many types become useless in Coq. It also reduces the number of type errors during type inference for unused implicit type parameters, as we have seen in the introduction.
+Thanks to this propagation of erasure, we limit the number of type parameters appearing in the generated types. This is helpful because with the erasure of GADT parameters many types become useless in Coq and clutter the output. It also reduces the number of type errors during type inference for unused implicit type parameters, as we have seen in the introduction.
 
 ## Pattern matching
 By default, we only do a syntactic transformation from pattern matching in OCaml to pattern matching in Coq. We encode the `when` clauses with an additional boolean parameter:
@@ -227,9 +261,46 @@ where we cast each pattern variable as explicitly stated in the OCaml code. With
 
     Axiom cast : forall {A : Set} (B : Set), A -> B.
 
-which we can eliminate while doing proofs with:
+Note that this axiom is unsound as we can inhabit&nbsp;`Empty_set`:
+
+    cast Empty_set tt : Empty_set
+
+We suppose the use of the&nbsp;`cast` to be valid as we follow the types computed by the OCaml compiler. To eliminate the&nbsp;`cast` axiom is proofs, we can use the following evaluation axiom:
 
     Axiom cast_eval : forall {A : Set} {x : A}, cast A x = x.
+
+For example, to show that&nbsp;`to_int` is idempotent over integers:
+
+    Lemma to_int_idempotent (n : Z) : to_int Int (to_int Int n) = n.
+
+we first evaluate the left-hand side expression:
+
+    unfold to_int; simpl.
+
+what gives us:
+
+      n : Z
+      ============================
+      cast Z (cast Z n) = n
+    1 subgoal
+
+By rewriting two times with&nbsp;`cast_eval`:
+
+    do 2 rewrite cast_eval.
+
+we obtain:
+
+    1 subgoal
+      
+      n : Z
+      ============================
+      n = n
+
+and then by reflexivity the proof is completed. If we give incorrect parameters to&nbsp;`to_int`, such as:
+
+    to_int Int false
+
+the&nbsp;`cast_eval` axiom does not apply. Still, this term cannot be a valid OCaml code, so we believe that the&nbsp;`cast_eval` axiom covers all the interesting cases.
 
 ### Casting the result of branches
 In case there is a need to also cast the result value of each branch there is the `@coq_match_gadt_with_result` attribute:
