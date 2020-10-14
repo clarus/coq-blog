@@ -1,4 +1,4 @@
-With [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) we can translate many [OCaml](https://ocaml.org/) constructs to an equivalent in the [Coq](https://coq.inria.fr/) language. In this post, we will show:
+With [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) we can translate many [OCaml](https://ocaml.org/) constructs to an equivalent in the [Coq](https://coq.inria.fr/) language. Based on the code which we encounter, we continue to update coq-of-ocaml to handle more OCaml programming patterns. In this post, we will show:
 
 * how we changed the representation of functors to have a clearer generated code;
 * how we handled the anonymous sub-signatures.
@@ -52,7 +52,7 @@ we would generate the following Coq code:
             Target.y := y
           |}) : {_ : unit & Target.signature (t := (|X|).(Source.t))}).
 
-where everything is packed into the function `F`, translating one record into another. Thus the records use local `let` declarations rather than top-level `Definition` for standard modules. To instead have top-level definitions in the functor, we use a plain module with the parameters represented as a type-class:
+Here the whole functor `F` is packed into a single function definition. This function translates a record for `X` into another record representing the output of the functor. To define this record we use local `let` declarations rather than top-level `Definition`. We changed that to have top-level definitions for each item of the functor. By representing the functor parameters as a type-class, we now generate:
 
     Module F.
       Class FArgs := {
@@ -72,9 +72,9 @@ where everything is packed into the function `F`, translating one record into an
     End F.
     Definition F X := F.functor {| F.X := X |}.
 
-We declare the functor arguments in a class `FArgs`. This class has one field per functor parameter (in this case only `X`). We give to each declaration as an implicit parameter `` `{FArgs}`` so that the parameter `X` is always accessible. At the end, we materialize the functor as a function `functor` from an instance of the class of parameters, to the record of the resulting module. Eventually, we define the functor `F` as a function taking parameters in order and converting them to an instance of the class of arguments.
+The class `FArgs` contains the functor arguments. This class has one field per functor parameter (in this case only `X`). We give to each declaration as an implicit parameter `` `{FArgs}`` so that the parameter `X` is always accessible. At the end, we materialize the functor as a function `functor` from an instance of the class of parameters, to the record of the resulting module. Eventually, we define the functor `F` as a function taking parameters in order and converting them to an instance of the class of arguments.
 
-Remark: we do not use the [sections mechanism](https://coq.inria.fr/refman/language/core/sections.html), because this would not compose. Indeed, we cannot create modules inside sections in the current version of Coq. Thus we could only represent flat functors, but not functors with sub-modules.
+Remark: we do not use the [section mechanism](https://coq.inria.fr/refman/language/core/sections.html), because this would not compose. Indeed, we cannot create modules inside sections in the current version of Coq. Thus we can only represent flat functors with sections, but not functors with sub-modules.
 
 For modules represented by records we do the same, without the `FArgs` parameter. For example, we translate:
 
@@ -106,7 +106,7 @@ We hope that this presentation is cleaner on the Coq side. For example:
 
 * we can directly talk about individual items without referencing the whole resulting record;
 * we can talk about intermediate items which may not be exported at the end;
-* we can have plain sub-modules for large functors (which cannot be represented as records when there are no named signatures);
+* we can have plain sub-modules for large functors (which cannot be represented as records with the current system when there are no named signatures);
 * we can define new types as we are at top-level.
 
 ## Anonymous sub-signatures
@@ -130,7 +130,7 @@ For large signatures, we tend to use sub-signatures in order to group items goin
       type t = Ciphertext.t
     end
 
-Since we represent signatures by records, we cannot directly represent the sub-signature for `Ciphertext` in the signature `Validator`. Thus, we were generating the following error message:
+Since we represent signatures by records, we cannot directly represent the sub-signature for `Ciphertext` in the signature `Validator`. Indeed, there are no notions of sub-records in Coq. Thus, we were generating the following error message:
 
     --- foo.ml:8:23 ------------------------------------------------------------ not_supported (1/1) ---
 
@@ -148,7 +148,7 @@ Since we represent signatures by records, we cannot directly represent the sub-s
 
     Anonymous definition of signatures is not handled
 
-Now we inline the sub-modules by prefixing the name of their fields:
+Now we inline the sub-modules by prefixing the name of their fields, so that we generate a single flat record in Coq. For the OCaml code above, we generate:
 
     Module T_encoding.
       Record signature {t : Set} : Set := {
@@ -167,7 +167,7 @@ Now we inline the sub-modules by prefixing the name of their fields:
       }.
     End Validator.
 
-We propagate the naming of the types. For example the type `t` in `Ciphertext` is renamed as `Ciphertext_t`. For all other fields which involve this type `t`, we mark it as `Ciphertext_t`. We keep using nested records for sub-signatures with a name. For example, the sub-module `CV` is a field of type `T_encoding.signature`, which is itself a record. The two variables `Ciphertext_t` and `CV_t` are the two abstract types of the signature. As with flat signatures, we represent them using existential types when unknown.
+We prefix all the fields of the sub-module `Ciphertext` by `Ciphertext_`. We propagate the naming of the types. For example the type `t` from `Ciphertext` is renamed as `Ciphertext_t` in all the subsequent expressions. For all other fields which involve this type `t`, we mark it as `Ciphertext_t`. We keep using nested records for sub-signatures with a name. For example, the sub-module `CV` is a field of type `T_encoding.signature`, which is itself a record. The two variables `Ciphertext_t` and `CV_t` are the two abstract types of the signature. As with flat signatures, we represent them using existential types when unknown.
 
 We also changed the way we translate the identifiers to reference items in signatures. For example, if we have a functor using the field `Ciphertext.get_memo_size`:
 
@@ -175,7 +175,7 @@ We also changed the way we translate the identifiers to reference items in signa
       let get = V.Ciphertext.get_memo_size
     end
 
-we would generate:
+we now generate:
 
     Module F.
       Class FArgs := {
@@ -191,11 +191,11 @@ we would generate:
 Here we represent `V.Ciphertext.get_memo_size` by `(|V|).(Validator.Ciphertext_get_memo_size)`. We use the notation to access record fields with `record.(field)`. We project the potential existential variables with the notation `(|...|)`. Here are the steps we followed to translate this identifier:
 
 * check if `V` has a known named signature (in this case we find the signature `Validator`);
-* check if `Ciphertext` has a known signature (we find nothing);
+* check if `Ciphertext` has a known signature (we do not find one);
 * conclude that the `get_memo_size` field has probably been inlined in the signature definition;
 * generate a record access on `V` on the field `Ciphertext_get_memo_size`, which is the concatenation of `Ciphertext` and `get_memo_size` according to the way we prefix field names in inlining.
 
 The handling of anonymous sub-signatures is not completely mandatory. Indeed, we could also give a name to the sub-signatures in the OCaml code. However we encountered some cases were this was convenient, in order not to modify the OCaml code too much.
 
 ## Conclusion
-We have shown two new translation strategies which, we hope, will polish the experience of using [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml). This work was mainly directed by an experiment at handling some code from the [Tezos](https://tezos.com/) codebase. The aim was to verify some parts of the [sapling](https://blog.nomadic-labs.com/sapling-integration-in-tezos-tech-preview.html) project. This code was outside of the protocol, which is the part we are used to work with. We met some new OCaml constructs and patterns. In particular, we encountered large functors with anonymous sub-signatures, plain sub-modules, and new type definitions.
+We have shown two new translation strategies which, we hope, will polish the experience of using [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml). This work was mainly directed by an experiment at handling some code from the [Tezos](https://tezos.com/) codebase. The aim was to verify some parts of the [sapling](https://blog.nomadic-labs.com/sapling-integration-in-tezos-tech-preview.html) project. This code is outside of the protocol, which is the part we are the most used to work with. Then, we met some new OCaml constructs and patterns. In particular, we encountered large functors with anonymous sub-signatures, plain sub-modules, and new type definitions.
