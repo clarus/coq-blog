@@ -4,12 +4,12 @@ With [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) we can translate man
 * how we handled the anonymous sub-signatures.
 
 ## Functors like plain modules
-We represent functors in Coq using functions over dependent records. We like this representation because:
+Th module system of OCaml allows to represent modules parametrized by others. Such parametrized modules are called [functors](https://ocaml.org/releases/4.11/htmlman/moduleexamples.html#s:functors). We represent modules with a named signature by [records](https://coq.inria.fr/refman/language/core/records.html) in Coq. Then we encode functors by functions over dependent records. We like this representation because:
 
-* we can also encode first-class modules;
-* it does not depend on the functor system of Coq, so relies on a smaller part of the Coq kernel.
+* we can also encode [first-class modules](https://ocaml.org/releases/4.11/htmlman/firstclassmodules.html) (modules used in the context of values in OCaml);
+* it does not depend on the functor system of Coq, but only on dependent types. The less Coq features from the kernel we use, the safer we feel.
 
-An issue we had was expressing lemma about items of a functor. For example, with the following OCaml code:
+An issue we had was expressing lemmas about items of a functor. For example, with the following OCaml code:
 
     module type Source = sig
       type t
@@ -52,7 +52,7 @@ we would generate the following Coq code:
             Target.y := y
           |}) : {_ : unit & Target.signature (t := (|X|).(Source.t))}).
 
-Here the whole functor `F` is packed into a single function definition. This function translates a record for `X` into another record representing the output of the functor. To define this record we use local `let` declarations rather than top-level `Definition`. We changed that to have top-level definitions for each item of the functor. By representing the functor parameters as a type-class, we now generate:
+There are two module types `Source` and `Target` which we represent by record definitions. We parametrize these records by their abstract types. We represent the functor `F` by a function from the type of record `Source` to the type of record `Target`. Here the whole definition of `F` is packed into a single function. We define the resulting record using local `let` declarations. We changed that to have top-level definitions for each item of the functor (`t` and `y`). By representing the functor parameters as a type-class, we now generate:
 
     Module F.
       Class FArgs := {
@@ -72,9 +72,9 @@ Here the whole functor `F` is packed into a single function definition. This fun
     End F.
     Definition F X := F.functor {| F.X := X |}.
 
-The class `FArgs` contains the functor arguments. This class has one field per functor parameter (in this case only `X`). We give to each declaration as an implicit parameter `` `{FArgs}`` so that the parameter `X` is always accessible. At the end, we materialize the functor as a function `functor` from an instance of the class of parameters, to the record of the resulting module. Eventually, we define the functor `F` as a function taking parameters in order and converting them to an instance of the class of arguments.
+The class `FArgs` contains the functor arguments. This class has one field per functor parameter (in this case only `X`). We give to each declaration an implicit parameter `` `{FArgs}`` so that the parameter `X` is always accessible. At the end of the module, we materialize the functor as a function `functor` from an instance of the class of parameters, to the record of the resulting module. Eventually, we define the functor `F` as a function taking parameters in order and convert them to an instance of the class `FArgs`.
 
-Remark: we do not use the [section mechanism](https://coq.inria.fr/refman/language/core/sections.html), because this would not compose. Indeed, we cannot create modules inside sections in the current version of Coq. Thus we can only represent flat functors with sections, but not functors with sub-modules.
+Remark: we do not use the [section mechanism](https://coq.inria.fr/refman/language/core/sections.html), because this would not compose. Indeed, we cannot create modules inside sections in the current version of Coq. Thus we can only represent flat functors with sections, and cannot represent functors with sub-modules.
 
 For modules represented by records we do the same, without the `FArgs` parameter. For example, we translate:
 
@@ -107,7 +107,7 @@ We hope that this presentation is cleaner on the Coq side. For example:
 * we can directly talk about individual items without referencing the whole resulting record;
 * we can talk about intermediate items which may not be exported at the end;
 * we can have plain sub-modules for large functors (which cannot be represented as records with the current system when there are no named signatures);
-* we can define new types as we are at top-level.
+* we can define new types as we would at top-level.
 
 ## Anonymous sub-signatures
 For large signatures, we tend to use sub-signatures in order to group items going together. For example, we can define in OCaml:
