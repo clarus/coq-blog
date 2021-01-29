@@ -2,10 +2,10 @@ The tool [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) translates [OCam
 
 We originally used existential types to represent abstract module types. This could be a source of complexity for the reasoning on the generated code. Indeed, existential types require to do frequent projections and packing in Coq. In this blog post, we show how we removed the need of existential types in non-first-class modules.
 
-> The tool coq-of-ocaml is mainly developed at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify the crypto-currency [Tezos](https://tezos.com/). This tool is also readily usable for your own OCaml projects, please do not hesitate to contact us in case of questions!
+> The tool coq-of-ocaml is mainly developed at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify the crypto-currency [Tezos](https://tezos.com/). This tool is also readily usable for your own OCaml projects, please do not hesitate to [contact us](mailto:contact@nomadic-labs.com) in case of questions!
 
 ## Example
-We take the following OCaml code to show how we now translate the modules' abstract types in Coq:
+We take the following OCaml code to show how we now translate the abstract types of modules in Coq:
 
     module F (X : Source) : Target with type t2 = X.t = struct
       type t1 = string
@@ -21,14 +21,16 @@ We assume that:
 * the signature `Target` has two abstract types `t1` and `t2`, the type `t2` being explicitly specified as `X.t` in this example.
 
 ### Now
-With the latest changes in coq-of-ocaml, we translate this OCaml example into the following Coq code:
+We show how we now translate this OCaml example with the latest changes in coq-of-ocaml. We start by using a [Coq type class](https://coq.inria.fr/refman/addendum/type-classes.html) to represent the functors as explained in a [previous article](http://coq-blog.clarus.me/improvements-of-coq-of-ocaml-for-functors-and-signatures.html):
 
     Module F.
       Class FArgs {X_t : Set} := {
         X : Source (t := X_t);
       }.
       Arguments Build_FArgs {_}.
-      
+
+We represent the abstract type `t` of `X` with a parameter `X_t` of the class `FArgs`. This type is implicit (notation&nbsp;`{}`) since we can infer it from the module `X`. We then define the various fields of the functor, including a special field&nbsp;`functor` which is the record representing the result of the functor:
+
       Definition t1 `{FArgs} : Set := string.
       
       Definition t2 `{FArgs} : Set := X.(Source.t).
@@ -40,22 +42,25 @@ With the latest changes in coq-of-ocaml, we translate this OCaml example into th
           Target.y := y
         |}.
     End F.
+
+Finally, we wrap the the functor `F.functor` into a function `F` without type classes:
+
     Definition F {X_t : Set} (X : Source (t := X_t))
       : Target (t1 := _) (t2 := X.(Source.t)) :=
       let '_ := F.Build_FArgs X in
       F.functor.
 
-    Definition FM := F M.
-
-We use a [Coq type class](https://coq.inria.fr/refman/addendum/type-classes.html) to represent the functors as explained in a [previous article](http://coq-blog.clarus.me/improvements-of-coq-of-ocaml-for-functors-and-signatures.html).
-
-We represent the abstract type `t` of `X` with a parameter `X_t` of the class `FArgs`. This type is implicit (notation&nbsp;`{}`) since we can infer it from the module `X`. When we wrap the the functor `F.functor` into a function `F` without type classes, we keep `X_t` as an implicit parameter. For the abstract type `t1`, we let Coq infer its value with:
+We keep `X_t` as an implicit parameter. For the abstract type `t1`, we let Coq infer its value with:
 
     Target (t1 := _) (t2 := X.(Source.t))
 
-Since Coq has access to the definition of&nbsp;`F`, it is able to guess the value of `t1`. Thus we use an explicit definition instead of an existential type. For the type `t2`, we directly give its value&nbsp;`X.(Source.t)` like in the OCaml source. We think it is better to always give an explicit type value when possible. Indeed, the expression inferred by Coq may be to large and cause performance issues.
+Since Coq has access to the definition of&nbsp;`F`, it is able to guess the value of `t1`, and we do not need an existential type. For the type `t2`, we directly give its value&nbsp;`X.(Source.t)` like in the OCaml source. We think it is better to always give an explicit type value when possible. Indeed, the expression inferred by Coq may be too large and have caused performance issues in some of our examples.
 
-To apply the functor&nbsp;`F` on&nbsp;`M` we simply do a function application&nbsp;`F M`. Coq infers all the missing abstract type values for us.
+To apply the functor&nbsp;`F` on&nbsp;`M` we simply do a function application&nbsp;`F M`:
+
+    Definition FM := F M.
+
+Coq infers all the missing abstract type values for us.
 
 ### Before
 Before these recent changes, we were wrapping all the modules into one existential type for each abstract type. On this example, we would have generated the following Coq code:
@@ -151,7 +156,7 @@ For example, in OCaml the module&nbsp;`Map` is declared as follows:
 
     module Make: functor (Ord : OrderedType) -> S with type key = Ord.t
 
-The signature&nbsp;`S` has two abstract types&nbsp;`key` and&nbsp;`t`. The signature&nbsp;`OrderedType` has one abstract type&nbsp;`t`. We transform the declaration of the functore&nbsp;`Make` to the axioms:
+The signature&nbsp;`S` has two abstract types&nbsp;`key` and&nbsp;`t`. The signature&nbsp;`OrderedType` has one abstract type&nbsp;`t`. We transform the declaration of the functor&nbsp;`Make` to the axioms:
 
     Parameter Make_t :
       forall {Ord_t : Set} (Ord : OrderedType (t := Ord_t)), Set -> Set.
