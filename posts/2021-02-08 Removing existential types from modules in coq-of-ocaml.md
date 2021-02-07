@@ -1,11 +1,11 @@
-The tool [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) translates [OCaml](https://ocaml.org/) programs to [Coq](https://coq.inria.fr/) programs using a shallow embedding. To translate functors in Coq, we use dependent records in order to be able to represent first-class modules.
+The tool [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) translates [OCaml](https://ocaml.org/) programs to [Coq](https://coq.inria.fr/) programs using a shallow embedding. To translate the [modules and functors](https://caml.inria.fr/pub/docs/manual-ocaml/moduleexamples.html) of OCaml we use polymorphic [records](https://coq.inria.fr/refman/language/core/records.html) in Coq. With this representation, we are also able to translate [first-class modules](https://caml.inria.fr/pub/docs/manual-ocaml/firstclassmodules.html).
 
-We originally used existential types to represent abstract module types. This could be a source of complexity for the reasoning on the generated code. Indeed, existential types require to do frequent projections and packing in Coq. In this blog post, we show how we removed the need of existential types in non-first-class modules.
+We originally used existential types to represent abstract module types. This could be a source of complexity for the reasoning on the generated code. Indeed, existential types require to do frequent [projections](https://coq.inria.fr/library/Coq.Init.Specif.html#projT2) and [wrapping](https://coq.inria.fr/library/Coq.Init.Specif.html#existT) in Coq. In this blog post, we show how we removed the need of existential types in most non-first-class modules.
 
-> The tool coq-of-ocaml is mainly developed at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify the crypto-currency [Tezos](https://tezos.com/). This tool is also readily usable for your own OCaml projects, please do not hesitate to [contact us](mailto:contact@nomadic-labs.com) in case of questions!
+> The tool coq-of-ocaml is mainly developed at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify the implementation of the crypto-currency [Tezos](https://tezos.com/). This tool is also readily usable for your own OCaml projects, please do not hesitate to [contact us](mailto:contact@nomadic-labs.com) in case of questions!
 
 ## Example
-We take the following OCaml code to show how we now translate the abstract types of modules in Coq:
+We take the following OCaml code:
 
     module F (X : Source) : Target with type t2 = X.t = struct
       type t1 = string
@@ -21,7 +21,7 @@ We assume that:
 * the signature `Target` has two abstract types `t1` and `t2`, the type `t2` being explicitly specified as `X.t` in this example.
 
 ### Now
-We show how we now translate this OCaml example with the latest changes in coq-of-ocaml. We start by using a [Coq type class](https://coq.inria.fr/refman/addendum/type-classes.html) to represent the functors as explained in a [previous article](http://coq-blog.clarus.me/improvements-of-coq-of-ocaml-for-functors-and-signatures.html):
+We show how we now translate this OCaml example with the latest changes in coq-of-ocaml. In particular, we show how we avoid using existential types for the abstract module types. We start by using a [Coq type class](https://coq.inria.fr/refman/addendum/type-classes.html) to represent the functor parameters as explained in a [previous article](http://coq-blog.clarus.me/improvements-of-coq-of-ocaml-for-functors-and-signatures.html):
 
     Module F.
       Class FArgs {X_t : Set} := {
@@ -43,20 +43,20 @@ We represent the abstract type `t` of `X` with a parameter `X_t` of the class `F
         |}.
     End F.
 
-Finally, we wrap the the functor `F.functor` into a function `F` without type classes:
+Finally, we wrap the functor `F.functor` into a function `F` without type classes:
 
     Definition F {X_t : Set} (X : Source (t := X_t))
       : Target (t1 := _) (t2 := X.(Source.t)) :=
       let '_ := F.Build_FArgs X in
       F.functor.
 
-We keep `X_t` as an implicit parameter. For the abstract type `t1`, we let Coq infer its value with:
+We keep `X_t` as an implicit parameter. The type `X_t` is a parameter rather than an existential type. For the abstract type `t1`, we let Coq infer its value with:
 
     Target (t1 := _) (t2 := X.(Source.t))
 
-Since Coq has access to the definition of&nbsp;`F`, it is able to guess the value of `t1`, and we do not need an existential type. For the type `t2`, we directly give its value&nbsp;`X.(Source.t)` like in the OCaml source. We think it is better to always give an explicit type value when possible. Indeed, the expression inferred by Coq may be too large and have caused performance issues in some of our examples.
+Since Coq has access to the definition of&nbsp;`F`, it is able to guess the value of `t1`, and we do not need an existential type there. For the type `t2`, we directly give its value&nbsp;`X.(Source.t)` like in the OCaml source. We think it is better to always give an explicit type value when possible. Indeed, the expression inferred by Coq may be too large and have caused performance issues in some of our examples.
 
-To apply the functor&nbsp;`F` on&nbsp;`M` we simply do a function application&nbsp;`F M`:
+To apply the functor&nbsp;`F` on&nbsp;`M` we simply do a function application:
 
     Definition FM := F M.
 
@@ -115,6 +115,10 @@ with the abstract types:
     ...
     M_n : t_n_1, t_n_2, ...
 
+and returning a module of signature&nbsp;`S` with the abstract types:
+
+    S : t_1, t_2, ...
+
 we push all the abstract types in front, so that the type of the function representing the functor `F` in Coq is:
 
     F :
@@ -128,21 +132,21 @@ we push all the abstract types in front, so that the type of the function repres
         ...
         (t_n := ...)
 
-We only support functors whose parameters are all modules. Since we support modules containing functors, it is always possible to wrap a functor into a module to pass it to another functor. However the functors in modules cannot return some abstract types (we had [universe level](http://adam.chlipala.net/cpdt/html/Universes.html) issues with that). We also expect the functors to be applied on all their parameters at once. Indeed, we need to infer all the abstract types of the parameters at once.
+We only support functors whose parameters are all modules. Since we support modules containing functors, it is possible to wrap a functor into a module to pass it to another functor. However the functors in modules cannot return some abstract types (we had [universe level](http://adam.chlipala.net/cpdt/html/Universes.html) issues with that). We also expect the functors to be applied on all their parameters at once (no [currying](https://en.wikipedia.org/wiki/Currying)). Indeed, we need to infer all the abstract types of the parameters at once.
 
-An example of a functor type from the [Coq code generated from Tezos](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml) is:
+An example of a functor type from the [Coq code generated from Tezos](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml) is the following:
 
     Definition Make_single_data_storage {C_t V_t : Set}
       (R : Storage_sigs.REGISTER) (C : Raw_context.T (t := C_t))
       (N : Storage_sigs.NAME) (V : Storage_sigs.VALUE (t := V_t))
       : Storage_sigs.Single_data_storage (t := C.(Raw_context.T.t))
         (value := V.(Storage_sigs.VALUE.t)) :=
-      ...
+      (* ... the definition *)
 
 ### Axioms
-We convert&nbsp;`.mli` files to lists of axioms. This raises an issue as we cannot infer the abstract types in a module or in the return module of a functor anymore. This inference is not possible because we do not have access to the definition of axioms. We solve this issue by adding one more axiom for each type to infer.
+We convert&nbsp;`.mli` files to lists of axioms. This raises an issue as we cannot infer the abstract types in a module or in the output module of a functor anymore. This inference is not possible because we do not have access to the definition of axioms. We solve this issue by adding one more axiom for each type to infer.
 
-For example, in OCaml the module&nbsp;`Map` is declared as follows:
+For example, in OCaml the module&nbsp;[`Map`](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Map.html) is declared as follows:
 
     module type S = sig
       (** The type of the map keys. *)
@@ -245,4 +249,4 @@ in Coq. Then to close the module and convert it back to a value, we wrap it into
     existS (A := Set -> Set) _ _ (...)
 
 ## Conclusion
-We hope that the effort we made into removing existential types from the generated Coq code will help you to do simpler proofs on OCaml programs using a lot of modules.
+We hope that the effort we made into removing existential types from the generated Coq code will help to do simpler proofs on OCaml programs using a lot of modules.
