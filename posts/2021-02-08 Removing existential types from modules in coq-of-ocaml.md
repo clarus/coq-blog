@@ -2,7 +2,7 @@ The tool [coq-of-ocaml](https://github.com/clarus/coq-of-ocaml) translates [OCam
 
 We originally used existential types to represent abstract module types. This could be a source of complexity for the reasoning on the generated code. Indeed, existential types require to do frequent [projections](https://coq.inria.fr/library/Coq.Init.Specif.html#projT2) and [wrapping](https://coq.inria.fr/library/Coq.Init.Specif.html#existT) in Coq. In this blog post, we show how we removed the need of existential types in most non-first-class modules.
 
-> The tool coq-of-ocaml is mainly developed at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify the implementation of the crypto-currency [Tezos](https://tezos.com/). This tool is also readily usable for your own OCaml projects, please do not hesitate to [contact us](mailto:contact@nomadic-labs.com) in case of questions!
+> We develop coq-of-ocaml at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify OCaml programs, and in particular the implementation of the crypto-currency [Tezos](https://tezos.com/). If you want to use this tool for your own projects, please do not hesitate to look at the [coq-of-ocaml website](https://clarus.github.io/coq-of-ocaml/) or [contact us](mailto:contact@nomadic-labs.com)!
 
 ## Example
 We take the following OCaml code:
