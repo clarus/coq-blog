@@ -1,9 +1,11 @@
-In this blog post, we will show how we [formally verify](https://en.wikipedia.org/wiki/Formal_verification) in [Coq](https://coq.inria.fr/) some properties about the parser of [smart-contracts](https://en.wikipedia.org/wiki/Smart_contract) for the crypto-currency [Tezos](https://tezos.com/). To get a formalization of the [implementation of the parser](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/script_ir_translator.ml), written in [OCaml](https://ocaml.org/), we use the tool [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) to convert it automatically to Coq. We will talk about the tricks we used to get this conversion to work, in particular for the GADTs and the mutually recursive functions. We will also present the properties which we verified and how we did it.
+In this blog post, we will show how we [formally verify](https://en.wikipedia.org/wiki/Formal_verification) in [Coq](https://coq.inria.fr/) some properties about the parser of [smart-contracts](https://en.wikipedia.org/wiki/Smart_contract) for the crypto-currency [Tezos](https://tezos.com/). The [proofs of this formal verification](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml/-/tree/master/src/Proto_alpha/Proofs/Script_ir_translator) are hosted in our project [coq-tezos-of-ocaml](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml).
+
+To get a formalization of the [implementation of the parser](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/script_ir_translator.ml), written in [OCaml](https://ocaml.org/), we use the tool [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) to convert it automatically to Coq. We will talk about the tricks we used to get this conversion to work, in particular for the GADTs and the mutually recursive functions. We will also present the properties which we verified and how we did it.
 
 > We develop coq-of-ocaml at [Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify OCaml programs, and in particular the implementation of the crypto-currency [Tezos](https://tezos.com/). If you want to use this tool for your own projects, please do not hesitate to look at the [coq-of-ocaml website](https://clarus.github.io/coq-of-ocaml/) or [contact us](mailto:contact@nomadic-labs.com)!
 
 ## How do we convert the OCaml code to Coq
-The code which we are interested into is in the file [`script_ir_translator.ml`](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/script_ir_translator.ml). This is a long file, containing in particular the parser and type-checker of the [Michelson](https://wiki.tezosagora.org/files/language.html#michelson) language for smart-contracts. We are interested into the functions "parse something" and "unparse something" to show that there are compatible. We use the tool coq-of-ocaml to convert the code of this file. Since it depends on other files of the code of Tezos (for type definitions or primitives), we need to have the Coq definition of all its dependencies too. This is done in the project [coq-tezos-of-ocaml](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml).
+The code which we are interested into is in the file [`script_ir_translator.ml`](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/script_ir_translator.ml). This is a long file, containing in particular the parser and type-checker of the [Michelson](https://wiki.tezosagora.org/files/language.html#michelson) language for smart-contracts. We are interested into the functions "parse something" and "unparse something" to show that there are compatible. We use the tool coq-of-ocaml to convert the code of this file. Since it depends on other files of the code of Tezos (for type definitions or primitives), we need to have the Coq definition of all its dependencies too. This is done in the project [coq-tezos-of-ocaml](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml). The translation of `script_ir_translator.ml` is in [src/Proto\_alpha/Script\_ir\_translator.v](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml/-/blob/master/src/Proto_alpha/Script_ir_translator.v).
 
 ### Mutually recursive functions
 Mutually recursive functions are a challenge in Coq because of the syntactic constraints to make sure that each function terminates. Indeed, termination is important for Coq because a non-terminating functions would make the whole system logically inconsistent. Moreover, OCaml programs may not follow the syntactic constraints for termination of Coq as the OCaml compiler does not check for termination. Thus we use several techniques to translate the OCaml code to Coq without modifying too much the source:
@@ -121,7 +123,7 @@ Our current approach to translate [GADTs](https://caml.inria.fr/pub/docs/manual-
 Fortunately, for our experiment we did not need to use dynamic casts and the code generated without the type parameters for the GADTs was compiling just fine!
 
 ## The proofs
-We wanted to verify the following property:
+All the proofs are accessible online on [coq-tezos-of-ocaml/src/Proto\_alpha/Proofs/Script\_ir\_translator](https://gitlab.com/nomadic-labs/coq-tezos-of-ocaml/-/tree/master/src/Proto_alpha/Proofs/Script_ir_translator). We wanted to verify the following property:
 
      forall term, parse (unparse term) = term
 
@@ -190,9 +192,9 @@ Finally, we check that the pre-condition `Script_typed_ir.Ty.is_valid` is true f
         | _ => True
         end.
 
-The proof proceeds by induction on `node`.
+The proof proceeds by induction on the parameter `node`.
 
 ## Conclusion
-We have seen that we can write basic formal proofs about the parser of smart-contracts of Tezos. We do that by first automatically translating the OCaml code to Coq, and then by doing the proofs in Coq.
+We have seen that we can write basic formal proofs about the parser of smart-contracts of Tezos. We do that first by automatically translating the OCaml code to Coq, and then by doing the proofs in Coq.
 
-We will next focus on writing proofs on the parsing functions for the data. These functions are slightly more involved than the parsing functions on the types, but follow the same structure.
+We will next focus on writing proofs on the parsing functions for the data of smart-contracts. These functions are slightly more involved than the parsing functions on the types, but follow the same structure.
