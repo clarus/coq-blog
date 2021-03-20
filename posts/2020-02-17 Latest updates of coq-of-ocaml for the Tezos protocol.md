@@ -1,5 +1,7 @@
 We recently made a lot of progress on the formalization in [Coq](https://coq.inria.fr/) of the [Tezos economic protocol](https://gitlab.com/tezos/tezos/-/tree/master/src/proto_alpha/lib_protocol), written in [OCaml](https://ocaml.org/), using [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/). We present here some of the new features of coq-of-ocaml and the results on the formalization of Tezos.
 
+> We develop [coq-of-ocaml]((https://clarus.github.io/coq-of-ocaml/)) at [🐙 Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify OCaml programs, and in particular the implementation of the crypto-currency [Tezos](https://tezos.com/). If you want to use this tool for your own projects, please do not hesitate to look at our [website](https://clarus.github.io/coq-of-ocaml/) or [contact us](mailto:contact@nomadic-labs.com)!
+
 ## Functors
 Previously, we were using dependent records to represent first-class modules. We now use dependent records whenever possible, even for non-first-class modules. This enables us to convert [OCaml functors](https://dev.realworldocaml.org/functors.html) to Coq functions over dependent records. As an example, we translate this OCaml program:
 

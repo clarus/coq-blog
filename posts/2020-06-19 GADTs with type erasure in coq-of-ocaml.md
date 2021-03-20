@@ -1,5 +1,7 @@
 [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) is a compiler from the [OCaml](https://ocaml.org/) language to [Coq](https://coq.inria.fr/). It now supports the conversion of the [full Tezos protocol](https://clarus.github.io/coq-of-ocaml/examples/tezos/), composed of around 35.000 lines of code. The [OCaml's GADTs](https://caml.inria.fr/pub/docs/manual-ocaml/gadts.html) are a challenge to compile, as they have no direct equivalent in Coq. We present how we currently convert the GADTs, and especially the new mechanism of type erasure propagation.
 
+> We develop [coq-of-ocaml]((https://clarus.github.io/coq-of-ocaml/)) at [🐙 Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify OCaml programs, and in particular the implementation of the crypto-currency [Tezos](https://tezos.com/). If you want to use this tool for your own projects, please do not hesitate to look at our [website](https://clarus.github.io/coq-of-ocaml/) or [contact us](mailto:contact@nomadic-labs.com)!
+
 ## Introduction
 Let us look at a short example of GADT which we cannot directly compile to Coq. If we define the annotated trees of integers with a&nbsp;`sum` function for trees of two elements:
 
