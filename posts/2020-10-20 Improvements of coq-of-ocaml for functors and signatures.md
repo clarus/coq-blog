@@ -3,7 +3,7 @@ With [coq-of-ocaml](https://clarus.github.io/coq-of-ocaml/) we can translate man
 * how we changed the representation of functors to have a clearer generated code;
 * how we handled the anonymous sub-signatures.
 
-> We develop [coq-of-ocaml]((https://clarus.github.io/coq-of-ocaml/)) at [🐙 Nomadic Labs](https://www.nomadic-labs.com/) with the aim to formally verify OCaml programs, and in particular the implementation of the crypto-currency [Tezos](https://tezos.com/). If you want to use this tool for your own projects, please do not hesitate to look at our [website](https://clarus.github.io/coq-of-ocaml/) or [contact us](mailto:contact@nomadic-labs.com)!
+> We develop [coq-of-ocaml]((https://clarus.github.io/coq-of-ocaml/)) at [🐙&nbsp;Nomadic&nbsp;Labs](https://www.nomadic-labs.com/) with the aim to formally verify OCaml programs, and in particular the implementation of the crypto-currency [Tezos](https://tezos.com/). If you want to use this tool for your own projects, please do not hesitate to look at our [website](https://clarus.github.io/coq-of-ocaml/) or [contact us](mailto:contact@nomadic-labs.com)!
 
 ## Functors like plain modules
 Th module system of OCaml allows to represent modules parametrized by others. Such parametrized modules are called [functors](https://ocaml.org/releases/4.11/htmlman/moduleexamples.html#s:functors). We represent modules with a named signature by [records](https://coq.inria.fr/refman/language/core/records.html) in Coq. Then we encode functors by functions over dependent records. We like this representation because:
