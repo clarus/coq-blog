@@ -1,0 +1,42 @@
+name: Publish blog
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+      - name: Install dependencies and theme
+        run: |
+          gem install redcarpet --no-document
+          curl -fL https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css -o static/style.min.css
+      - name: Build blog
+        run: |
+          make
+          rm blog/static
+          cp -R static blog/static
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: blog
+      - id: deployment
+        uses: actions/deploy-pages@v4

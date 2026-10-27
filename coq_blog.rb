@@ -65,7 +65,7 @@ def footer
   render_erb("templates/footer.html.erb", binding)
 end
 
-blog = Blog.new("Coq blog - Guillaume Claret", "http://coq-blog.clarus.me/", "coqblog")
+blog = Blog.new("Coq blog - Guillaume Claret", "https://coq-blog.clarus.me/", "coqblog")
 
 for page in ["index.html", "wip.html", "rss.xml"] do
   File.open("blog/#{page}", "w") do |f|
