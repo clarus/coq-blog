@@ -1,5 +1,5 @@
 # Coq Blog
-A blog about Coq. Hosted on [coq-blog.clarus.me](https://coq-blog.clarus.me/).
+A blog about Coq. Hosted on [rocq-blog.clarus.me](https://rocq-blog.clarus.me/).
 
 ## Use or fork to make your own blog
 Install the Markdown parser (you first need Ruby):
